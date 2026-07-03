@@ -1,0 +1,173 @@
+[gd_scene load_steps=8 format=3]
+
+[sub_resource type="StandardMaterial3D" id="mat_ground"]
+albedo_color = Color(0.45, 0.47, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_slope"]
+albedo_color = Color(0.85, 0.58, 0.28, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_steep"]
+albedo_color = Color(0.75, 0.28, 0.24, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_bhop"]
+albedo_color = Color(0.36, 0.72, 0.4, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_wall"]
+albedo_color = Color(0.36, 0.55, 0.83, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_pound"]
+albedo_color = Color(0.66, 0.42, 0.82, 1)
+
+[sub_resource type="StandardMaterial3D" id="mat_accent"]
+albedo_color = Color(0.92, 0.2, 0.2, 1)
+
+[node name="TestLevel" type="Node3D"]
+
+[node name="Plaza" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.5, 0)
+use_collision = true
+size = Vector3(24, 1, 24)
+material = SubResource("mat_ground")
+
+[node name="SlopeBank" type="Node3D" parent="."]
+
+[node name="Ramp15" type="CSGBox3D" parent="SlopeBank"]
+position = Vector3(-9, 1.04, -17.8)
+rotation = Vector3(0.261799, 0, 0)
+use_collision = true
+size = Vector3(6, 1, 12)
+material = SubResource("mat_slope")
+
+[node name="Landing15" type="CSGBox3D" parent="SlopeBank"]
+position = Vector3(-9, 2.45, -26.1)
+use_collision = true
+size = Vector3(6, 1, 6)
+material = SubResource("mat_ground")
+
+[node name="Ramp30" type="CSGBox3D" parent="SlopeBank"]
+position = Vector3(-3, 2.54, -17.2)
+rotation = Vector3(0.523599, 0, 0)
+use_collision = true
+size = Vector3(6, 1, 12)
+material = SubResource("mat_slope")
+
+[node name="Landing30" type="CSGBox3D" parent="SlopeBank"]
+position = Vector3(-3, 5.15, -24.9)
+use_collision = true
+size = Vector3(6, 1, 6)
+material = SubResource("mat_ground")
+
+[node name="Ramp44" type="CSGBox3D" parent="SlopeBank"]
+position = Vector3(3, 3.78, -16.3)
+rotation = Vector3(0.767945, 0, 0)
+use_collision = true
+size = Vector3(6, 1, 12)
+material = SubResource("mat_slope")
+
+[node name="Landing44" type="CSGBox3D" parent="SlopeBank"]
+position = Vector3(3, 7.3, -23.1)
+use_collision = true
+size = Vector3(6, 1, 6)
+material = SubResource("mat_ground")
+
+[node name="Ramp55Steep" type="CSGBox3D" parent="SlopeBank"]
+position = Vector3(9, 5.42, -16)
+rotation = Vector3(0.959931, 0, 0)
+use_collision = true
+size = Vector3(6, 1, 14)
+material = SubResource("mat_steep")
+
+[node name="RunwayAndBhop" type="Node3D" parent="."]
+
+[node name="DownRunway" type="CSGBox3D" parent="RunwayAndBhop"]
+position = Vector3(27.2, -5.45, 0)
+rotation = Vector3(-0.314159, -1.5707963, 0)
+use_collision = true
+size = Vector3(8, 1, 32)
+material = SubResource("mat_slope")
+
+[node name="LowerField" type="CSGBox3D" parent="RunwayAndBhop"]
+position = Vector3(57, -10.45, 0)
+use_collision = true
+size = Vector3(30, 1, 24)
+material = SubResource("mat_ground")
+
+[node name="Bhop1" type="CSGBox3D" parent="RunwayAndBhop"]
+position = Vector3(76, -10.6, 0)
+use_collision = true
+size = Vector3(4, 1, 4)
+material = SubResource("mat_bhop")
+
+[node name="Bhop2" type="CSGBox3D" parent="RunwayAndBhop"]
+position = Vector3(83, -10.9, 0)
+use_collision = true
+size = Vector3(4, 1, 4)
+material = SubResource("mat_bhop")
+
+[node name="Bhop3" type="CSGBox3D" parent="RunwayAndBhop"]
+position = Vector3(91, -11.3, 0)
+use_collision = true
+size = Vector3(4, 1, 4)
+material = SubResource("mat_bhop")
+
+[node name="Bhop4" type="CSGBox3D" parent="RunwayAndBhop"]
+position = Vector3(100, -11.8, 0)
+use_collision = true
+size = Vector3(4, 1, 4)
+material = SubResource("mat_bhop")
+
+[node name="Bhop5" type="CSGBox3D" parent="RunwayAndBhop"]
+position = Vector3(110, -12.4, 0)
+use_collision = true
+size = Vector3(4, 1, 4)
+material = SubResource("mat_bhop")
+
+[node name="BhopEnd" type="CSGBox3D" parent="RunwayAndBhop"]
+position = Vector3(121, -12.7, 0)
+use_collision = true
+size = Vector3(12, 1, 12)
+material = SubResource("mat_ground")
+
+[node name="WallAndPound" type="Node3D" parent="."]
+
+[node name="Bridge" type="CSGBox3D" parent="WallAndPound"]
+position = Vector3(-13, -0.5, 8)
+use_collision = true
+size = Vector3(4, 1, 6)
+material = SubResource("mat_ground")
+
+[node name="WestPad" type="CSGBox3D" parent="WallAndPound"]
+position = Vector3(-19, -0.5, 8)
+use_collision = true
+size = Vector3(10, 1, 10)
+material = SubResource("mat_ground")
+
+[node name="Tower" type="CSGBox3D" parent="WallAndPound"]
+position = Vector3(-21, 6, 8)
+use_collision = true
+size = Vector3(8, 12, 8)
+material = SubResource("mat_wall")
+
+[node name="KickWall" type="CSGBox3D" parent="WallAndPound"]
+position = Vector3(-14.5, 6, 8)
+use_collision = true
+size = Vector3(1, 12, 6)
+material = SubResource("mat_wall")
+
+[node name="PoundPad" type="CSGBox3D" parent="WallAndPound"]
+position = Vector3(-21, 12.05, 10.5)
+use_collision = true
+size = Vector3(2.5, 0.3, 2.5)
+material = SubResource("mat_accent")
+
+[node name="BoostTarget" type="CSGBox3D" parent="WallAndPound"]
+position = Vector3(-21, 3.5, -18)
+use_collision = true
+size = Vector3(10, 1, 10)
+material = SubResource("mat_pound")
+
+[node name="PracticeWall" type="CSGBox3D" parent="WallAndPound"]
+position = Vector3(0, 3, 11.5)
+use_collision = true
+size = Vector3(8, 6, 1)
+material = SubResource("mat_wall")

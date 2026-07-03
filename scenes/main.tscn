@@ -1,0 +1,60 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/test_level.tscn" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
+[ext_resource type="Script" path="res://src/camera/orbit_camera.gd" id="3_camera"]
+[ext_resource type="Script" path="res://src/debug/debug_overlay.gd" id="4_overlay"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_material"]
+sky_top_color = Color(0.35, 0.46, 0.71, 1)
+sky_horizon_color = Color(0.64, 0.65, 0.67, 1)
+ground_bottom_color = Color(0.2, 0.17, 0.13, 1)
+ground_horizon_color = Color(0.64, 0.65, 0.67, 1)
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_material")
+
+[sub_resource type="Environment" id="environment"]
+background_mode = 2
+sky = SubResource("sky")
+tonemap_mode = 2
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.9, -0.5, 0)
+shadow_enabled = true
+
+[node name="TestLevel" parent="." instance=ExtResource("1_level")]
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector3(0, 0.3, 4)
+camera_rig_path = NodePath("../CameraRig")
+
+[node name="CameraRig" type="Node3D" parent="." groups=["camera_rig"] node_paths=PackedStringArray("target")]
+position = Vector3(0, 2, 4)
+script = ExtResource("3_camera")
+target = NodePath("../Player")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig"]
+rotation = Vector3(-0.35, 0, 0)
+spring_length = 6.0
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D"]
+
+[node name="DebugOverlay" type="CanvasLayer" parent="."]
+script = ExtResource("4_overlay")
+
+[node name="Label" type="Label" parent="DebugOverlay"]
+offset_left = 14.0
+offset_top = 12.0
+offset_right = 500.0
+offset_bottom = 300.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.7)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 15
