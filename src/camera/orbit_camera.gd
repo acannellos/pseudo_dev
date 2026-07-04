@@ -15,7 +15,17 @@ extends Node3D
 @export_range(-89.0, 0.0) var pitch_min_degrees := -70.0
 @export_range(0.0, 89.0) var pitch_max_degrees := 35.0
 
+@export_group("Speed Feedback")
+## FOV rests here and kicks out toward [member fov_max] with speed.
+@export var fov_base := 75.0
+@export var fov_max := 94.0
+## Horizontal speed where the FOV kick starts / where it saturates.
+@export var fov_speed_min := 9.0
+@export var fov_speed_max := 28.0
+@export var fov_ease_speed := 5.0
+
 @onready var _arm: SpringArm3D = $SpringArm3D
+@onready var _camera: Camera3D = $SpringArm3D/Camera3D
 
 
 func _ready() -> void:
@@ -49,6 +59,22 @@ func _physics_process(delta: float) -> void:
 	if target != null:
 		var goal := target.global_position + Vector3.UP * pivot_height
 		global_position = global_position.lerp(goal, 1.0 - exp(-follow_speed * delta))
+	_update_speed_feedback(delta)
+
+
+## Speed-reactive feedback: FOV kicks out as horizontal speed builds.
+func _update_speed_feedback(delta: float) -> void:
+	var body := target as CharacterBody3D
+	if body == null or delta <= 0.0:
+		return
+	var flat := body.velocity
+	flat.y = 0.0
+	var speed := flat.length()
+	var kick := clampf(
+			(speed - fov_speed_min) / maxf(fov_speed_max - fov_speed_min, 0.01),
+			0.0, 1.0)
+	_camera.fov = lerpf(_camera.fov, lerpf(fov_base, fov_max, kick),
+			1.0 - exp(-fov_ease_speed * delta))
 
 
 func _rotate_view(yaw_delta: float, pitch_delta: float) -> void:

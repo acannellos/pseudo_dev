@@ -15,15 +15,52 @@ const FRAME := 1.0 / 12.0
 
 @export var animation_player: AnimationPlayer
 @export var state_machine: PlayerStateMachine
+## Source of the [signal Player.landed] impacts that drive landing squash.
+@export var player: Player
 ## Path (relative to the AnimationPlayer root) of the node the placeholder
 ## poses are keyed on.
-@export var pivot_path := NodePath("Visual/Pivot")
+@export var pivot_path := NodePath("Visual/Squash/Pivot")
+## Node scaled by the landing squash — the *parent* of the animated pivot,
+## so impact weight stacks with (never fights) the keyed poses.
+@export var squash_node: Node3D
+
+@export_group("Landing Squash")
+## Vertical squash at a max-speed landing (0.45 = down to 55% height).
+@export var landing_squash_max := 0.45
+## Fall speed that produces the full squash.
+@export var landing_squash_reference_speed := 40.0
+## Squash recovered per stop-motion frame (on twos, like the animations).
+@export var landing_squash_recovery := 0.18
+
+var _squash := 1.0
+var _squash_timer := 0.0
 
 
 func _ready() -> void:
 	_build_placeholder_library()
 	if state_machine != null:
 		state_machine.state_changed.connect(_on_state_changed)
+	if player != null:
+		player.landed.connect(_on_player_landed)
+
+
+func _process(delta: float) -> void:
+	if squash_node == null:
+		return
+	# Recover in discrete steps so the squash reads as stop-motion too.
+	_squash_timer += delta
+	if _squash_timer < FRAME:
+		return
+	_squash_timer = 0.0
+	_squash = move_toward(_squash, 1.0, landing_squash_recovery)
+	var spread := 1.0 + (1.0 - _squash) * 0.8
+	squash_node.scale = Vector3(spread, _squash, spread)
+
+
+func _on_player_landed(impact_speed: float) -> void:
+	var weight := clampf(impact_speed / landing_squash_reference_speed, 0.0, 1.0)
+	_squash = minf(_squash, 1.0 - landing_squash_max * weight)
+	_squash_timer = FRAME
 
 
 func _on_state_changed(_previous: StringName, current: StringName) -> void:
@@ -76,6 +113,45 @@ func _build_placeholder_library() -> void:
 	_ensure(library, &"wall_slide", _make_animation(4.0 * FRAME, true, [
 			[0.0, Vector3(1.06, 0.94, 1.06)],
 			[2.0 * FRAME, Vector3(0.98, 1.04, 0.98)],
+	]))
+	_ensure(library, &"slide", _make_animation(4.0 * FRAME, true, [
+			[0.0, Vector3(1.25, 0.55, 1.25)],
+			[2.0 * FRAME, Vector3(1.2, 0.6, 1.2)],
+	]))
+	_ensure(library, &"turnaround", _make_animation(4.0 * FRAME, true, [
+			[0.0, Vector3(1.15, 0.8, 1.15)],
+			[2.0 * FRAME, Vector3(1.1, 0.85, 1.1)],
+	]))
+	_ensure(library, &"turn_jump", _make_animation(6.0 * FRAME, true, [
+			[0.0, Vector3(0.8, 1.3, 0.8)],
+			[2.0 * FRAME, Vector3(1.2, 0.75, 1.2)],
+			[4.0 * FRAME, Vector3(0.75, 1.25, 0.75)],
+	]))
+	_ensure(library, &"long_jump", _make_animation(4.0 * FRAME, true, [
+			[0.0, Vector3(0.85, 0.75, 1.4)],
+			[2.0 * FRAME, Vector3(0.9, 0.8, 1.3)],
+	]))
+	_ensure(library, &"ledge_grab", _make_animation(4.0 * FRAME, true, [
+			[0.0, Vector3(0.95, 1.1, 0.95)],
+			[2.0 * FRAME, Vector3(0.92, 1.14, 0.92)],
+	]))
+	_ensure(library, &"wall_run", _make_animation(4.0 * FRAME, true, [
+			[0.0, Vector3(1.05, 0.95, 1.15)],
+			[2.0 * FRAME, Vector3(0.95, 1.05, 1.1)],
+	]))
+	_ensure(library, &"slide_hop", _make_animation(4.0 * FRAME, true, [
+			[0.0, Vector3(1.15, 0.8, 1.15)],
+			[2.0 * FRAME, Vector3(1.1, 0.85, 1.1)],
+	]))
+	_ensure(library, &"backflip", _make_animation(6.0 * FRAME, true, [
+			[0.0, Vector3(0.85, 1.25, 0.85)],
+			[2.0 * FRAME, Vector3(1.15, 0.8, 1.15)],
+			[4.0 * FRAME, Vector3(0.85, 1.2, 0.85)],
+	]))
+	_ensure(library, &"side_flip", _make_animation(6.0 * FRAME, true, [
+			[0.0, Vector3(1.2, 0.85, 0.85)],
+			[2.0 * FRAME, Vector3(0.8, 1.2, 0.9)],
+			[4.0 * FRAME, Vector3(1.1, 0.9, 0.9)],
 	]))
 
 

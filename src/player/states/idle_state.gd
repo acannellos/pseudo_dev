@@ -1,6 +1,7 @@
 extends PlayerState
 ## Grounded with no meaningful speed. Bleeds off residual velocity and waits
-## for input.
+## for input. Jumping with directional intent from a standstill picks the
+## flip variants (backflip / side-flip).
 
 
 func physics_update(delta: float) -> void:
@@ -11,6 +12,10 @@ func physics_update(delta: float) -> void:
 		state_machine.change_to(&"Air")
 		return
 	if player.consume_jump_buffer():
+		var flip: StringName = player.flip_jump_variant()
+		if flip != &"":
+			state_machine.change_to(flip)
+			return
 		player.hop_chain = 0
 		player.start_jump()
 		state_machine.change_to(&"Air")

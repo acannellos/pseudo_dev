@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=29 format=3]
 
 [ext_resource type="Script" path="res://src/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://src/player/movement_stats.gd" id="2_stats"]
@@ -10,6 +10,16 @@
 [ext_resource type="Script" path="res://src/player/states/ground_pound_state.gd" id="8_pound"]
 [ext_resource type="Script" path="res://src/player/states/pound_land_state.gd" id="9_poundland"]
 [ext_resource type="Script" path="res://src/player/states/wall_slide_state.gd" id="10_wallslide"]
+[ext_resource type="Script" path="res://src/player/states/slide_state.gd" id="13_slide"]
+[ext_resource type="Script" path="res://src/player/states/turnaround_state.gd" id="14_turnaround"]
+[ext_resource type="Script" path="res://src/player/states/turn_jump_state.gd" id="15_turnjump"]
+[ext_resource type="Script" path="res://src/player/states/long_jump_state.gd" id="16_longjump"]
+[ext_resource type="Script" path="res://src/player/states/ledge_grab_state.gd" id="17_ledgegrab"]
+[ext_resource type="Script" path="res://src/player/states/wall_run_state.gd" id="18_wallrun"]
+[ext_resource type="Script" path="res://src/player/states/slide_hop_state.gd" id="19_slidehop"]
+[ext_resource type="Script" path="res://src/player/states/backflip_state.gd" id="20_backflip"]
+[ext_resource type="Script" path="res://src/player/states/side_flip_state.gd" id="21_sideflip"]
+[ext_resource type="Script" path="res://src/fx/player_fx.gd" id="22_playerfx"]
 [ext_resource type="Script" path="res://src/player/stop_motion_animator.gd" id="11_animator"]
 [ext_resource type="Script" path="res://src/debug/debug_draw.gd" id="12_debugdraw"]
 
@@ -49,13 +59,15 @@ shape = SubResource("CapsuleShape3D_body")
 
 [node name="Visual" type="Node3D" parent="."]
 
-[node name="Pivot" type="Node3D" parent="Visual"]
+[node name="Squash" type="Node3D" parent="Visual"]
 
-[node name="Body" type="MeshInstance3D" parent="Visual/Pivot"]
+[node name="Pivot" type="Node3D" parent="Visual/Squash"]
+
+[node name="Body" type="MeshInstance3D" parent="Visual/Squash/Pivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("CapsuleMesh_body")
 
-[node name="Nose" type="MeshInstance3D" parent="Visual/Pivot"]
+[node name="Nose" type="MeshInstance3D" parent="Visual/Squash/Pivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.45)
 mesh = SubResource("BoxMesh_nose")
 
@@ -84,11 +96,45 @@ script = ExtResource("9_poundland")
 [node name="WallSlide" type="Node" parent="StateMachine"]
 script = ExtResource("10_wallslide")
 
+[node name="Slide" type="Node" parent="StateMachine"]
+script = ExtResource("13_slide")
+
+[node name="Turnaround" type="Node" parent="StateMachine"]
+script = ExtResource("14_turnaround")
+
+[node name="TurnJump" type="Node" parent="StateMachine"]
+script = ExtResource("15_turnjump")
+
+[node name="LongJump" type="Node" parent="StateMachine"]
+script = ExtResource("16_longjump")
+
+[node name="LedgeGrab" type="Node" parent="StateMachine"]
+script = ExtResource("17_ledgegrab")
+
+[node name="WallRun" type="Node" parent="StateMachine"]
+script = ExtResource("18_wallrun")
+
+[node name="SlideHop" type="Node" parent="StateMachine"]
+script = ExtResource("19_slidehop")
+
+[node name="Backflip" type="Node" parent="StateMachine"]
+script = ExtResource("20_backflip")
+
+[node name="SideFlip" type="Node" parent="StateMachine"]
+script = ExtResource("21_sideflip")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
-[node name="StopMotionAnimator" type="Node" parent="." node_paths=PackedStringArray("animation_player", "state_machine")]
+[node name="StopMotionAnimator" type="Node" parent="." node_paths=PackedStringArray("animation_player", "state_machine", "player", "squash_node")]
 script = ExtResource("11_animator")
 animation_player = NodePath("../AnimationPlayer")
+state_machine = NodePath("../StateMachine")
+player = NodePath("..")
+squash_node = NodePath("../Visual/Squash")
+
+[node name="PlayerFX" type="Node3D" parent="." node_paths=PackedStringArray("player", "state_machine")]
+script = ExtResource("22_playerfx")
+player = NodePath("..")
 state_machine = NodePath("../StateMachine")
 
 [node name="DebugDraw" type="Node3D" parent="."]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://c2wcj0cn1gdr2"]
 
 [sub_resource type="StandardMaterial3D" id="mat_ground"]
 albedo_color = Color(0.45, 0.47, 0.5, 1)
@@ -15,159 +15,154 @@ albedo_color = Color(0.36, 0.72, 0.4, 1)
 [sub_resource type="StandardMaterial3D" id="mat_wall"]
 albedo_color = Color(0.36, 0.55, 0.83, 1)
 
-[sub_resource type="StandardMaterial3D" id="mat_pound"]
-albedo_color = Color(0.66, 0.42, 0.82, 1)
-
 [sub_resource type="StandardMaterial3D" id="mat_accent"]
 albedo_color = Color(0.92, 0.2, 0.2, 1)
 
-[node name="TestLevel" type="Node3D"]
+[sub_resource type="StandardMaterial3D" id="mat_pound"]
+albedo_color = Color(0.66, 0.42, 0.82, 1)
 
-[node name="Plaza" type="CSGBox3D" parent="."]
-position = Vector3(0, -0.5, 0)
+[node name="TestLevel" type="Node3D" unique_id=1370463392]
+
+[node name="Plaza" type="CSGBox3D" parent="." unique_id=1945913911]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 use_collision = true
 size = Vector3(24, 1, 24)
 material = SubResource("mat_ground")
 
-[node name="SlopeBank" type="Node3D" parent="."]
+[node name="SlopeBank" type="Node3D" parent="." unique_id=1257774350]
 
-[node name="Ramp15" type="CSGBox3D" parent="SlopeBank"]
-position = Vector3(-9, 1.04, -17.8)
-rotation = Vector3(0.261799, 0, 0)
+[node name="Ramp15" type="CSGBox3D" parent="SlopeBank" unique_id=955508647]
+transform = Transform3D(1, 0, 0, 0, 0.96592593, -0.2588187, 0, 0.2588187, 0.96592593, -9, 1.04, -17.8)
 use_collision = true
 size = Vector3(6, 1, 12)
 material = SubResource("mat_slope")
 
-[node name="Landing15" type="CSGBox3D" parent="SlopeBank"]
-position = Vector3(-9, 2.45, -26.1)
+[node name="Landing15" type="CSGBox3D" parent="SlopeBank" unique_id=1977913705]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2.45, -26.1)
 use_collision = true
 size = Vector3(6, 1, 6)
 material = SubResource("mat_ground")
 
-[node name="Ramp30" type="CSGBox3D" parent="SlopeBank"]
-position = Vector3(-3, 2.54, -17.2)
-rotation = Vector3(0.523599, 0, 0)
+[node name="Ramp30" type="CSGBox3D" parent="SlopeBank" unique_id=567433782]
+transform = Transform3D(1, 0, 0, 0, 0.86602527, -0.50000024, 0, 0.50000024, 0.86602527, -3, 2.54, -17.2)
 use_collision = true
 size = Vector3(6, 1, 12)
 material = SubResource("mat_slope")
 
-[node name="Landing30" type="CSGBox3D" parent="SlopeBank"]
-position = Vector3(-3, 5.15, -24.9)
+[node name="Landing30" type="CSGBox3D" parent="SlopeBank" unique_id=371810560]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 5.15, -24.9)
 use_collision = true
 size = Vector3(6, 1, 6)
 material = SubResource("mat_ground")
 
-[node name="Ramp44" type="CSGBox3D" parent="SlopeBank"]
-position = Vector3(3, 3.78, -16.3)
-rotation = Vector3(0.767945, 0, 0)
+[node name="Ramp44" type="CSGBox3D" parent="SlopeBank" unique_id=1805594877]
+transform = Transform3D(1, 0, 0, 0, 0.7193397, -0.69465846, 0, 0.69465846, 0.7193397, 3, 3.78, -16.3)
 use_collision = true
 size = Vector3(6, 1, 12)
 material = SubResource("mat_slope")
 
-[node name="Landing44" type="CSGBox3D" parent="SlopeBank"]
-position = Vector3(3, 7.3, -23.1)
+[node name="Landing44" type="CSGBox3D" parent="SlopeBank" unique_id=888792865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 7.3, -23.1)
 use_collision = true
 size = Vector3(6, 1, 6)
 material = SubResource("mat_ground")
 
-[node name="Ramp55Steep" type="CSGBox3D" parent="SlopeBank"]
-position = Vector3(9, 5.42, -16)
-rotation = Vector3(0.959931, 0, 0)
+[node name="Ramp55Steep" type="CSGBox3D" parent="SlopeBank" unique_id=783405112]
+transform = Transform3D(1, 0, 0, 0, 0.5735765, -0.819152, 0, 0.819152, 0.5735765, 9, 5.42, -16)
 use_collision = true
 size = Vector3(6, 1, 14)
 material = SubResource("mat_steep")
 
-[node name="RunwayAndBhop" type="Node3D" parent="."]
+[node name="RunwayAndBhop" type="Node3D" parent="." unique_id=378903995]
 
-[node name="DownRunway" type="CSGBox3D" parent="RunwayAndBhop"]
-position = Vector3(27.2, -5.45, 0)
-rotation = Vector3(-0.314159, -1.5707963, 0)
+[node name="DownRunway" type="CSGBox3D" parent="RunwayAndBhop" unique_id=1022044402]
+transform = Transform3D(7.54979e-08, 0.30901673, -0.9510566, 0, 0.9510566, 0.30901673, 1, -2.3330115e-08, 7.180278e-08, 27.2, -5.45, 0)
 use_collision = true
 size = Vector3(8, 1, 32)
 material = SubResource("mat_slope")
 
-[node name="LowerField" type="CSGBox3D" parent="RunwayAndBhop"]
-position = Vector3(57, -10.45, 0)
+[node name="LowerField" type="CSGBox3D" parent="RunwayAndBhop" unique_id=1990557837]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 57, -10.45, 0)
 use_collision = true
 size = Vector3(30, 1, 24)
 material = SubResource("mat_ground")
 
-[node name="Bhop1" type="CSGBox3D" parent="RunwayAndBhop"]
-position = Vector3(76, -10.6, 0)
+[node name="Bhop1" type="CSGBox3D" parent="RunwayAndBhop" unique_id=807829283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 76, -10.6, 0)
 use_collision = true
 size = Vector3(4, 1, 4)
 material = SubResource("mat_bhop")
 
-[node name="Bhop2" type="CSGBox3D" parent="RunwayAndBhop"]
-position = Vector3(83, -10.9, 0)
+[node name="Bhop2" type="CSGBox3D" parent="RunwayAndBhop" unique_id=2032451949]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 83, -10.9, 0)
 use_collision = true
 size = Vector3(4, 1, 4)
 material = SubResource("mat_bhop")
 
-[node name="Bhop3" type="CSGBox3D" parent="RunwayAndBhop"]
-position = Vector3(91, -11.3, 0)
+[node name="Bhop3" type="CSGBox3D" parent="RunwayAndBhop" unique_id=1491644381]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 91, -11.3, 0)
 use_collision = true
 size = Vector3(4, 1, 4)
 material = SubResource("mat_bhop")
 
-[node name="Bhop4" type="CSGBox3D" parent="RunwayAndBhop"]
-position = Vector3(100, -11.8, 0)
+[node name="Bhop4" type="CSGBox3D" parent="RunwayAndBhop" unique_id=647087048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, -11.8, 0)
 use_collision = true
 size = Vector3(4, 1, 4)
 material = SubResource("mat_bhop")
 
-[node name="Bhop5" type="CSGBox3D" parent="RunwayAndBhop"]
-position = Vector3(110, -12.4, 0)
+[node name="Bhop5" type="CSGBox3D" parent="RunwayAndBhop" unique_id=1528393540]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110, -12.4, 0)
 use_collision = true
 size = Vector3(4, 1, 4)
 material = SubResource("mat_bhop")
 
-[node name="BhopEnd" type="CSGBox3D" parent="RunwayAndBhop"]
-position = Vector3(121, -12.7, 0)
+[node name="BhopEnd" type="CSGBox3D" parent="RunwayAndBhop" unique_id=1394602015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 121, -12.7, 0)
 use_collision = true
 size = Vector3(12, 1, 12)
 material = SubResource("mat_ground")
 
-[node name="WallAndPound" type="Node3D" parent="."]
+[node name="WallAndPound" type="Node3D" parent="." unique_id=2048415681]
 
-[node name="Bridge" type="CSGBox3D" parent="WallAndPound"]
-position = Vector3(-13, -0.5, 8)
+[node name="Bridge" type="CSGBox3D" parent="WallAndPound" unique_id=1622715040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, -0.5, 8)
 use_collision = true
 size = Vector3(4, 1, 6)
 material = SubResource("mat_ground")
 
-[node name="WestPad" type="CSGBox3D" parent="WallAndPound"]
-position = Vector3(-19, -0.5, 8)
+[node name="WestPad" type="CSGBox3D" parent="WallAndPound" unique_id=1008746626]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, -0.5, 8)
 use_collision = true
 size = Vector3(10, 1, 10)
 material = SubResource("mat_ground")
 
-[node name="Tower" type="CSGBox3D" parent="WallAndPound"]
-position = Vector3(-21, 6, 8)
+[node name="Tower" type="CSGBox3D" parent="WallAndPound" unique_id=1993697186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 6, 8)
 use_collision = true
 size = Vector3(8, 12, 8)
 material = SubResource("mat_wall")
 
-[node name="KickWall" type="CSGBox3D" parent="WallAndPound"]
-position = Vector3(-14.5, 6, 8)
+[node name="KickWall" type="CSGBox3D" parent="WallAndPound" unique_id=2075189443]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5, 6, 8)
 use_collision = true
 size = Vector3(1, 12, 6)
 material = SubResource("mat_wall")
 
-[node name="PoundPad" type="CSGBox3D" parent="WallAndPound"]
-position = Vector3(-21, 12.05, 10.5)
+[node name="PoundPad" type="CSGBox3D" parent="WallAndPound" unique_id=321266561]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 12.05, 10.5)
 use_collision = true
 size = Vector3(2.5, 0.3, 2.5)
 material = SubResource("mat_accent")
 
-[node name="BoostTarget" type="CSGBox3D" parent="WallAndPound"]
-position = Vector3(-21, 3.5, -18)
+[node name="BoostTarget" type="CSGBox3D" parent="WallAndPound" unique_id=1006760263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 3.5, -18)
 use_collision = true
 size = Vector3(10, 1, 10)
 material = SubResource("mat_pound")
 
-[node name="PracticeWall" type="CSGBox3D" parent="WallAndPound"]
-position = Vector3(0, 3, 11.5)
+[node name="PracticeWall" type="CSGBox3D" parent="WallAndPound" unique_id=254575524]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 11.5)
 use_collision = true
 size = Vector3(8, 6, 1)
 material = SubResource("mat_wall")

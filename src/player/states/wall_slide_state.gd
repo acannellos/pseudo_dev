@@ -21,7 +21,8 @@ func physics_update(delta: float) -> void:
 	player.desired_velocity = player.move_dir * player.stats.run_speed
 	player.move_and_slide()
 	if player.consume_jump_buffer():
-		_wall_kick()
+		player.perform_wall_kick(_wall_normal)
+		state_machine.change_to(&"Air")
 		return
 	if player.is_on_floor():
 		state_machine.change_to(&"Run")
@@ -31,13 +32,3 @@ func physics_update(delta: float) -> void:
 		return
 	if player.move_dir != Vector3.ZERO and player.move_dir.dot(-_wall_normal) < -0.5:
 		state_machine.change_to(&"Air")
-
-
-func _wall_kick() -> void:
-	var tangential := player.horizontal_velocity().slide(_wall_normal)
-	var out := Vector3(_wall_normal.x, 0.0, _wall_normal.z).normalized()
-	var flat := tangential * 0.9 + out * player.stats.wall_kick_out_speed
-	player.velocity = Vector3(flat.x, player.stats.wall_kick_up_speed, flat.z)
-	player.air_dash_available = true
-	player.facing = out
-	state_machine.change_to(&"Air")

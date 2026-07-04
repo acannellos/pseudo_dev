@@ -41,6 +41,45 @@ extends Resource
 ## How fast momentum redirects toward input at overspeed in the air (rad/s).
 @export var air_turn_speed := 3.2
 
+@export_group("Crouch Slide")
+## Friction applied to the slide instead of [member ground_decel].
+@export var slide_friction := 5.0
+## Slide friction never drags speed below this floor while crouch is held.
+@export var slide_sustain_speed := 4.5
+## Capsule height while sliding (standing height comes from the scene).
+@export var slide_capsule_height := 1.0
+## How fast the slide redirects toward input (rad/s); low = committed.
+@export var slide_turn_speed := 2.2
+
+@export_group("Turnaround")
+## Minimum grounded speed before a hard reversal triggers a skid.
+@export var turnaround_min_speed := 6.5
+## Input must oppose velocity by at least this angle to trigger the skid.
+@export var turnaround_angle_degrees := 120.0
+## Skid deceleration; the skid ends when speed crosses zero.
+@export var turnaround_decel := 28.0
+## Hard cap on skid duration in case deceleration never finishes.
+@export var turnaround_max_time := 0.6
+
+@export_group("Turn Jump")
+## Multiplier on [member jump_velocity] for a jump out of a skid.
+@export var turn_jump_height_multiplier := 1.35
+## Horizontal pop in the new facing direction when the turn jump launches.
+@export var turn_jump_forward_speed := 5.0
+
+@export_group("Long Jump")
+## Minimum grounded speed to convert a crouch-jump into a long jump.
+@export var long_jump_min_speed := 7.0
+## Vertical launch speed — deliberately flatter than a normal jump.
+@export var long_jump_velocity := 8.5
+## Horizontal speed added on top of current speed at launch.
+@export var long_jump_boost := 5.5
+## Ceiling on horizontal speed gained from chained long jumps.
+@export var long_jump_max_speed := 27.0
+## Slide age within which crouch+jump still reads as the long-jump combo;
+## older established slides slide-hop instead.
+@export var long_jump_combo_window := 0.2
+
 @export_group("Slopes")
 ## Slopes steeper than this are unwalkable and shed the character.
 @export var walkable_slope_degrees := 46.0
@@ -66,6 +105,71 @@ extends Resource
 @export var pound_boost_hop := 5.0
 ## Upward velocity of the pound super jump.
 @export var pound_jump_velocity := 17.0
+
+@export_group("Slide-Hop")
+## Vertical speed of a hop out of an established slide — flatter than a jump.
+@export var slide_hop_velocity := 7.5
+
+@export_group("Wavedash")
+## After an air dash touches down, jump within this window to wavedash.
+@export var wavedash_window := 0.09
+## Horizontal speed added by a successful wavedash (beyond the dash-hop's
+## plain speed keep).
+@export var wavedash_boost := 4.5
+
+@export_group("Triple Jump")
+## Jump again within this window after landing to continue the chain.
+@export var triple_jump_window := 0.3
+## Height multipliers for the second and third jump of the chain.
+@export var triple_jump_second_multiplier := 1.18
+@export var triple_jump_third_multiplier := 1.45
+
+@export_group("Side-flip / Backflip")
+## Height multiplier for both flip variants (no forward commitment).
+@export var flip_height_multiplier := 1.3
+## Backflip: grounded speed must be below this (near standstill).
+@export var backflip_max_speed := 2.0
+## Backflip: small pop opposite facing.
+@export var backflip_pop_speed := 3.5
+## Side-flip: grounded speed must be below this (strafe, not a momentum run).
+@export var sideflip_max_speed := 7.5
+## Side-flip: small lateral pop in the strafe direction.
+@export var sideflip_pop_speed := 4.0
+
+@export_group("Ledge Grab")
+## How far ahead of the chest the wall probe reaches.
+@export var ledge_reach := 0.85
+## Ledge lip must sit between these heights above the feet to be grabbable.
+@export var ledge_min_height := 0.7
+@export var ledge_max_height := 2.3
+## Rising faster than this means "not near apex yet" — no grab.
+@export var ledge_grab_max_rise_speed := 2.5
+## Brief hang before the climb starts.
+@export var ledge_hang_time := 0.1
+## Duration of the climb-up onto the lip.
+@export var ledge_mantle_time := 0.28
+
+@export_group("Wall Run")
+## Tangential (along-wall) speed needed to run the wall instead of sliding.
+@export var wall_run_min_speed := 10.0
+## How long the wall run lasts before it decays into slide/fall.
+@export var wall_run_time := 0.8
+## Gravity multiplier during the run — near-flat trajectory along the wall.
+@export var wall_run_gravity_scale := 0.12
+## Small vertical lift when the run starts.
+@export var wall_run_up_boost := 2.5
+
+@export_group("Bounce Pads")
+## Launch speed a pad uses when it does not override it per-instance.
+@export var bounce_default_speed := 20.0
+## Bounce amplification when ground-pounding onto a pad.
+@export var bounce_pound_multiplier := 1.35
+
+@export_group("Speed Boosters")
+## Speed added by a booster when it does not override it per-instance.
+@export var booster_default_boost := 8.0
+## Boosters never push the player past this horizontal speed.
+@export var booster_max_speed := 30.0
 
 @export_group("Wall")
 ## Terminal fall speed while wall sliding.
