@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/demo_castle/demo_castle.tscn" id="2_castle"]
 [ext_resource type="PackedScene" uid="uid://c2wcj0cn1gdr2" path="res://scenes/test_level.tscn" id="3_level1"]
 [ext_resource type="PackedScene" path="res://scenes/test_level_2.tscn" id="4_level2"]
+[ext_resource type="PackedScene" uid="uid://arena0combat01" path="res://scenes/test_level_3.tscn" id="12_level3"]
 [ext_resource type="PackedScene" uid="uid://bh0mmhlaqpm3c" path="res://scenes/player.tscn" id="5_player"]
 [ext_resource type="Script" uid="uid://bfjays677b4qj" path="res://src/camera/orbit_camera.gd" id="6_camera"]
 [ext_resource type="Script" uid="uid://c2cpnm6vx7u4e" path="res://src/debug/debug_overlay.gd" id="7_overlay"]
@@ -45,7 +46,7 @@ render_target_update_mode = 4
 
 [node name="LevelSwitcher" type="Node" parent="PixelPipeline/WorldViewport" unique_id=345156613 node_paths=PackedStringArray("current_level", "player")]
 script = ExtResource("8_switcher")
-levels = Array[PackedScene]([ExtResource("1_outdoor"), ExtResource("2_castle"), ExtResource("3_level1"), ExtResource("4_level2")])
+levels = Array[PackedScene]([ExtResource("1_outdoor"), ExtResource("2_castle"), ExtResource("3_level1"), ExtResource("4_level2"), ExtResource("12_level3")])
 current_level = NodePath("../DemoOutdoor")
 player = NodePath("../Player")
 

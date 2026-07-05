@@ -1,0 +1,76 @@
+[gd_scene load_steps=10 format=3 uid="uid://bounce0tektite1"]
+
+[ext_resource type="Script" uid="uid://cpwc1yovscvom" path="res://src/enemies/enemy_base.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://dfaaar36cdg3v" path="res://src/enemies/enemy_state_machine.gd" id="2_machine"]
+[ext_resource type="Script" uid="uid://d0ww5u1qsik2h" path="res://src/enemies/states/bouncer_idle_state.gd" id="3_idle"]
+[ext_resource type="Script" uid="uid://bu4jgmnfowu6s" path="res://src/enemies/states/bouncer_chase_state.gd" id="4_chase"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_slope_orange.tres" id="5_body"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_steep_red.tres" id="6_leg"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_bouncer"]
+radius = 0.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_body"]
+material = ExtResource("5_body")
+radius = 0.45
+height = 0.7
+radial_segments = 12
+rings = 6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_leg"]
+material = ExtResource("6_leg")
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.95
+radial_segments = 6
+
+[node name="Bouncer" type="CharacterBody3D" groups=["hittable", "targetable"]]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_enemy")
+max_hp = 3
+move_speed = 3.0
+engage_range = 8.0
+disengage_range = 14.0
+target_height = 0.6
+knockback_speed = 8.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.5, 0)
+shape = SubResource("SphereShape3D_bouncer")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.6, 0)
+mesh = SubResource("SphereMesh_body")
+
+[node name="LegFL" type="MeshInstance3D" parent="Visual"]
+position = Vector3(-0.45, 0.45, -0.35)
+rotation = Vector3(-0.5, 0, 0.7)
+mesh = SubResource("CylinderMesh_leg")
+
+[node name="LegFR" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0.45, 0.45, -0.35)
+rotation = Vector3(-0.5, 0, -0.7)
+mesh = SubResource("CylinderMesh_leg")
+
+[node name="LegBL" type="MeshInstance3D" parent="Visual"]
+position = Vector3(-0.45, 0.45, 0.35)
+rotation = Vector3(0.5, 0, 0.7)
+mesh = SubResource("CylinderMesh_leg")
+
+[node name="LegBR" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0.45, 0.45, 0.35)
+rotation = Vector3(0.5, 0, -0.7)
+mesh = SubResource("CylinderMesh_leg")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_machine")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("3_idle")
+
+[node name="Chase" type="Node" parent="StateMachine"]
+script = ExtResource("4_chase")

@@ -31,6 +31,9 @@
 [ext_resource type="Script" uid="uid://53mkgicudsk5" path="res://src/fx/afterimage_trail.gd" id="29_afterimage"]
 [ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_wood.tres" id="30_staffmat"]
 [ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_gold.tres" id="31_tipmat"]
+[ext_resource type="Script" uid="uid://oab25b7ypns0" path="res://src/player/states/lunge_state.gd" id="32_lunge"]
+[ext_resource type="Script" uid="uid://bc02x0eyqn8ur" path="res://src/targeting/targeting_system.gd" id="33_targeting"]
+[ext_resource type="Script" uid="uid://c36ss80gd6kly" path="res://src/targeting/companion_orb.gd" id="34_orb"]
 
 [sub_resource type="Resource" id="Resource_stats"]
 script = ExtResource("2_stats")
@@ -195,6 +198,9 @@ script = ExtResource("20_backflip")
 [node name="SideFlip" type="Node" parent="StateMachine" unique_id=1673930847]
 script = ExtResource("21_sideflip")
 
+[node name="Lunge" type="Node" parent="StateMachine"]
+script = ExtResource("32_lunge")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1735683260]
 
 [node name="StopMotionAnimator" type="Node" parent="." unique_id=799973052 node_paths=PackedStringArray("animation_player", "state_machine", "player", "squash_node")]
@@ -223,6 +229,15 @@ hitbox = NodePath("../AttackHitbox")
 script = ExtResource("29_afterimage")
 player = NodePath("..")
 source_visual = NodePath("../Visual")
+
+[node name="TargetingSystem" type="Node" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("33_targeting")
+player = NodePath("..")
+
+[node name="CompanionOrb" type="Node3D" parent="." node_paths=PackedStringArray("player", "targeting")]
+script = ExtResource("34_orb")
+player = NodePath("..")
+targeting = NodePath("../TargetingSystem")
 
 [node name="PlayerFX" type="Node3D" parent="." unique_id=502428521 node_paths=PackedStringArray("player", "state_machine", "combat")]
 script = ExtResource("22_playerfx")

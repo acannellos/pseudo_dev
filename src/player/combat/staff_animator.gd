@@ -17,6 +17,8 @@ const SWING_YAWS: Array = [
 	[-1.3, -0.1, 1.2],
 	[1.6, 0.0, -1.6],
 ]
+## Lunge overhand chop: pitch sweep instead of yaw (raised → down-forward).
+const LUNGE_PITCHES: Array = [1.3, 0.2, -0.9]
 ## Brief follow-through hold after the sweep before returning to the back.
 const LINGER := 0.08
 
@@ -49,16 +51,21 @@ func _on_swing_started(combo_index: int, _direction: Vector3) -> void:
 func _physics_process(delta: float) -> void:
 	if not _swinging:
 		return
-	var swing_time: float = combat.player.stats.swing_time
+	var lunging := _combo == CombatController.LUNGE_COMBO
+	var swing_time: float = combat.player.stats.lunge_swing_time if lunging \
+			else combat.player.stats.swing_time
 	_elapsed += delta
 	if _elapsed >= swing_time + LINGER:
 		_swinging = false
 		_apply_rest()
 		return
 	var pose := clampi(int(_elapsed / (swing_time / SWING_POSES)), 0, SWING_POSES - 1)
-	var yaws: Array = SWING_YAWS[_combo - 1]
 	position = SWING_POSITION
-	staff_pivot.rotation = Vector3(SWING_TILT, yaws[pose], 0.0)
+	if lunging:
+		staff_pivot.rotation = Vector3(LUNGE_PITCHES[pose], 0.0, 0.0)
+	else:
+		var yaws: Array = SWING_YAWS[_combo - 1]
+		staff_pivot.rotation = Vector3(SWING_TILT, yaws[pose], 0.0)
 
 
 func _apply_rest() -> void:

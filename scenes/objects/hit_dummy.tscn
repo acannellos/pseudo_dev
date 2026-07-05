@@ -29,7 +29,7 @@ height = 0.84
 radial_segments = 14
 rings = 7
 
-[node name="HitDummy" type="StaticBody3D" groups=["hittable"]]
+[node name="HitDummy" type="StaticBody3D" groups=["hittable", "targetable"]]
 script = ExtResource("1_dummy")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

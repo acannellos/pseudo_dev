@@ -148,6 +148,11 @@ func _build_placeholder_library() -> void:
 			[2.0 * FRAME, Vector3(1.15, 0.8, 1.15)],
 			[4.0 * FRAME, Vector3(0.85, 1.2, 0.85)],
 	]))
+	_ensure(library, &"lunge", _make_animation(6.0 * FRAME, false, [
+			[0.0, Vector3(0.85, 0.75, 1.35)],
+			[2.0 * FRAME, Vector3(0.9, 0.85, 1.2)],
+			[4.0 * FRAME, Vector3(1.15, 0.85, 1.0)],
+	]))
 	_ensure(library, &"side_flip", _make_animation(6.0 * FRAME, true, [
 			[0.0, Vector3(1.2, 0.85, 0.85)],
 			[2.0 * FRAME, Vector3(0.8, 1.2, 0.9)],

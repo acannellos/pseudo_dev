@@ -1,0 +1,108 @@
+[gd_scene load_steps=17 format=3 uid="uid://arena0combat01"]
+
+[ext_resource type="PackedScene" path="res://scenes/objects/hit_dummy.tscn" id="1_dummy"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/shield_brute.tscn" id="2_brute"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/poker.tscn" id="3_poker"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/flyer.tscn" id="4_flyer"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/bouncer.tscn" id="5_bouncer"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/volley_tower.tscn" id="6_tower"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_ground_grey.tres" id="mat_ground"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_wall_blue.tres" id="mat_wall"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_slope_orange.tres" id="mat_zone"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_bhop.tres" id="mat_zone2"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_accent.tres" id="mat_court"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_ledge_sage.tres" id="mat_zone3"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_goal.tres" id="mat_zone4"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_material"]
+sky_top_color = Color(0.32, 0.4, 0.6, 1)
+sky_horizon_color = Color(0.62, 0.6, 0.62, 1)
+ground_bottom_color = Color(0.18, 0.16, 0.14, 1)
+ground_horizon_color = Color(0.6, 0.58, 0.58, 1)
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_material")
+
+[sub_resource type="Environment" id="environment"]
+background_mode = 2
+sky = SubResource("sky")
+tonemap_mode = 2
+
+[node name="TestLevel3" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.9, -0.5, 0)
+shadow_enabled = true
+
+[node name="Arena" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.5, 0)
+use_collision = true
+size = Vector3(90, 1, 90)
+material = ExtResource("mat_ground")
+
+[node name="CenterWall" type="CSGBox3D" parent="."]
+position = Vector3(8, 1.1, 4)
+use_collision = true
+size = Vector3(7, 2.2, 1)
+material = ExtResource("mat_wall")
+
+[node name="BruteZone" type="CSGBox3D" parent="."]
+position = Vector3(-20, -0.49, -16)
+use_collision = true
+size = Vector3(16, 1, 16)
+material = ExtResource("mat_zone")
+
+[node name="PokerZone" type="CSGBox3D" parent="."]
+position = Vector3(20, -0.49, -16)
+use_collision = true
+size = Vector3(16, 1, 16)
+material = ExtResource("mat_zone2")
+
+[node name="FlyerZone" type="CSGBox3D" parent="."]
+position = Vector3(-20, -0.49, 16)
+use_collision = true
+size = Vector3(16, 1, 16)
+material = ExtResource("mat_zone3")
+
+[node name="BouncerZone" type="CSGBox3D" parent="."]
+position = Vector3(20, -0.49, 16)
+use_collision = true
+size = Vector3(16, 1, 16)
+material = ExtResource("mat_zone4")
+
+[node name="VolleyCourt" type="CSGBox3D" parent="."]
+position = Vector3(0, -0.49, -26)
+use_collision = true
+size = Vector3(8, 1, 20)
+material = ExtResource("mat_court")
+
+[node name="Dummies" type="Node3D" parent="."]
+
+[node name="HitDummy1" parent="Dummies" instance=ExtResource("1_dummy")]
+position = Vector3(3, 0, -3)
+
+[node name="HitDummy2" parent="Dummies" instance=ExtResource("1_dummy")]
+position = Vector3(-3.5, 0, -1)
+
+[node name="HitDummy3" parent="Dummies" instance=ExtResource("1_dummy")]
+position = Vector3(11, 0, 7)
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="ShieldBrute" parent="Enemies" instance=ExtResource("2_brute")]
+position = Vector3(-20, 0, -16)
+
+[node name="Poker" parent="Enemies" instance=ExtResource("3_poker")]
+position = Vector3(20, 0, -16)
+
+[node name="Flyer" parent="Enemies" instance=ExtResource("4_flyer")]
+position = Vector3(-20, 0, 16)
+
+[node name="Bouncer" parent="Enemies" instance=ExtResource("5_bouncer")]
+position = Vector3(20, 0, 16)
+
+[node name="VolleyTower" parent="Enemies" instance=ExtResource("6_tower")]
+position = Vector3(0, 0, -33)

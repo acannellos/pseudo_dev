@@ -56,6 +56,9 @@ var _standing_shape_center_y := 0.0
 @onready var state_machine: PlayerStateMachine = $StateMachine
 @onready var visual: Node3D = $Visual
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
+## Optional Z-targeting component; facing and flip variants key off it.
+@onready var targeting: TargetingSystem = \
+		get_node_or_null("TargetingSystem") as TargetingSystem
 
 
 func _ready() -> void:
@@ -125,16 +128,50 @@ func start_jump(jump_speed := -1.0) -> void:
 ## Context-sensitive grounded jump variants: the name of the flip state the
 ## current input asks for, or &"" for a plain jump. Backflip = near standstill
 ## with input opposing facing; side-flip = low-speed strafe input.
+##
+## While Z-targeting the reading is OoT's instead: facing is pinned at the
+## enemy, so away+jump is always a backflip and strafe+jump is always a
+## sidehop — no speed gates, deterministic like Link's.
 func flip_jump_variant() -> StringName:
 	if move_dir == Vector3.ZERO:
 		return &""
-	var speed := horizontal_velocity().length()
 	var toward := move_dir.normalized().dot(facing)
+	if is_targeting():
+		if toward < -0.4:
+			return &"Backflip"
+		if absf(toward) <= 0.55:
+			return &"SideFlip"
+		return &""
+	var speed := horizontal_velocity().length()
 	if speed <= stats.backflip_max_speed and toward < -0.6:
 		return &"Backflip"
 	if speed <= stats.sideflip_max_speed and absf(toward) <= 0.35:
 		return &"SideFlip"
 	return &""
+
+
+func is_targeting() -> bool:
+	return targeting != null and targeting.is_active()
+
+
+## Horizontal direction toward the current lock target (facing fallback).
+func target_dir() -> Vector3:
+	if not is_targeting():
+		return facing
+	var to_target := targeting.target.global_position - global_position
+	to_target.y = 0.0
+	return to_target.normalized() if to_target.length() > 0.05 else facing
+
+
+## Enemy attacks shove instead of damaging (no player health yet): a flat
+## push plus a pop, resolved through Air so momentum rules stay intact.
+func apply_knockback(direction: Vector3, speed := 8.0, up_speed := 4.5) -> void:
+	if state_machine.current_state != null \
+			and state_machine.current_state.name == &"LedgeGrab":
+		return
+	var flat := Vector3(direction.x, 0.0, direction.z).normalized()
+	velocity = flat * speed + Vector3.UP * up_speed
+	state_machine.change_to(&"Air")
 
 
 ## Speed reward for a correctly timed bunny hop.
@@ -378,13 +415,21 @@ func _update_timers(delta: float) -> void:
 
 func _update_facing(delta: float) -> void:
 	var target := facing
-	var flat := horizontal_velocity()
-	if flat.length() > 1.0:
-		target = flat.normalized()
-	elif move_dir != Vector3.ZERO:
-		target = move_dir.normalized()
+	var turn_speed := FACING_TURN_SPEED
+	if is_targeting():
+		# Z-lock: always square up to the enemy — movement becomes strafing
+		# because velocity no longer drives facing. Faster turn so the
+		# lock-on snap reads.
+		target = target_dir()
+		turn_speed *= 2.0
+	else:
+		var flat := horizontal_velocity()
+		if flat.length() > 1.0:
+			target = flat.normalized()
+		elif move_dir != Vector3.ZERO:
+			target = move_dir.normalized()
 	var angle := facing.signed_angle_to(target, Vector3.UP)
-	var max_turn := FACING_TURN_SPEED * delta
+	var max_turn := turn_speed * delta
 	facing = facing.rotated(Vector3.UP, clampf(angle, -max_turn, max_turn)).normalized()
 	visual.look_at(visual.global_position + facing)
 

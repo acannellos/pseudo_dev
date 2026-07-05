@@ -31,6 +31,15 @@ func _ready() -> void:
 	_flash_material.albedo_color = Color(1.0, 1.0, 1.0)
 
 
+## Z-target contract: knocked-down dummies drop the lock.
+func is_targetable() -> bool:
+	return _down_left <= 0.0
+
+
+func target_point() -> Vector3:
+	return global_position + Vector3.UP * 1.3
+
+
 ## Combat contract (see [CombatController]): [param hit] carries damage,
 ## direction, position, and combo_index.
 func take_hit(hit: Dictionary) -> void:

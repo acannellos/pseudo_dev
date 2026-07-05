@@ -11,21 +11,26 @@ The game renders through a toggleable 3D-pixel-art pipeline (low-res
 viewport, camera texel snapping, outlines, palette crush, toon lighting) —
 see [PIXEL_ART_PIPELINE.md](PIXEL_ART_PIPELINE.md). Two dressed demo
 scenes (outdoor fantasy, castle interior) join the two greybox test levels
-in the F5 rotation; the game boots into the outdoor demo.
+and the combat arena (enemy encounters — see [ENEMIES.md](ENEMIES.md)) in
+the F5 rotation; the game boots into the outdoor demo.
 
 ## Controls
+
+Gamepad labels below use the **Switch Pro controller** layout (buttons are
+positional, so on an Xbox pad read B as A, X as Y, etc.).
 
 | Action | Keyboard / mouse | Gamepad |
 | --- | --- | --- |
 | Move | WASD | Left stick |
 | Camera | Mouse | Right stick |
-| Jump | Space | A (bottom) |
-| Dash | Shift | X / Right shoulder |
-| Attack (3-hit staff combo) | F | Y (top) |
+| Jump | Space | B (bottom) |
+| Dash | Shift | Y (left) / R shoulder |
+| Attack (3-hit combo / targeted lunge) | F | X (top) |
+| Z-target / cycle target | Tab | ZL trigger |
 | Crouch / Slide (hold) | Left Ctrl | L3 (left stick click) |
-| Ground pound | C | B / Left shoulder |
+| Ground pound | C | A (right) / L shoulder |
 | Toggle debug view | F3 | — |
-| Cycle level (outdoor → castle → test 1 → test 2) | F5 | — |
+| Cycle level (outdoor → castle → test 1 → test 2 → arena) | F5 | — |
 | Toggle render-pipeline layers | 1–8 | — |
 | Release / capture mouse | Esc / click | — |
 
@@ -169,11 +174,48 @@ Turnaround — suppress the attack and cancel a swing in progress.
 
 The hitbox is a semicircular arc in front of the facing direction, visually
 traced by a low-poly anime slash arc that flashes and fades (rolled one way
-for swing 1, the other for swing 2, flat and larger for swing 3). Anything
-in the `hittable` group with a `take_hit(hit: Dictionary)` method takes the
-hit (`damage`, `direction`, `position`, `combo_index`). Practice dummies
+for swing 1, the other for swing 2, flat and larger for swing 3, vertical
+for the lunge). Anything in the `hittable` group with a
+`take_hit(hit: Dictionary)` method takes the hit (`damage`, `direction`,
+`position`, `combo_index`). Practice dummies
 (`scenes/objects/hit_dummy.tscn` — flash, wobble, knock flat, pop back up)
-stand near the spawn of the outdoor demo and test level 1.
+stand near the spawn of the outdoor demo, test level 1, and the arena, and
+are all Z-targetable.
+
+## Z-targeting
+
+OoT-style lock-on, built as another parallel component (`TargetingSystem`
+next to the state machine — no movement state changed to add it):
+
+- **ZL / Tab** locks the nearest targetable thing in range (14 m, needs
+  line of sight). Press again to **cycle** outward through the others
+  (wrapping); press with nothing else around to release. Walking out of
+  range (18 m) or losing line of sight for half a second breaks the lock
+  on its own — enemies also break off and go back to patrolling when you
+  leave, so every fight is escapable.
+- The **companion orb** (Navi stand-in) hovers by your shoulder and lags
+  behind during fast movement, catching up when you settle. On lock it
+  flies to the target and hovers over it, tinted gold; released, it drifts
+  home and back to cyan.
+- The **camera** swings onto the enemy–player line and stays behind you,
+  keeping both in frame (manual orbit is suspended while locked).
+- **Movement becomes strafing**: you always face the target; moving
+  sideways sidesteps instead of turning. Jump inputs read like Link's —
+  **away + jump = backflip**, **sideways + jump = sidehop** (the existing
+  Backflip/SideFlip states, made deterministic while locked), forward +
+  jump stays a plain jump.
+- **Attack while locked (grounded) = lunge**: a committed leap at the
+  target with an overhand slice — vertical slash VFX, double damage, and a
+  short landing recovery before control returns (the OoT jump attack).
+  Airborne attacks stay normal swings.
+
+Anything in the `targetable` group can be locked; optional methods
+`is_targetable()` and `target_point()` refine validity and where the orb
+hovers. Dummies and all five enemies implement it. For the enemy design —
+the shield brute, the poker, the flyer, the bouncer, and the volley spire —
+see [ENEMIES.md](ENEMIES.md); they live in the combat arena (test level 3,
+last stop in the F5 rotation), with a few also worth Z-targeting practice
+against the outdoor dummies.
 
 ## State machine
 
@@ -198,8 +240,9 @@ diagram of every transition, see [STATE_CHART.md](STATE_CHART.md).
 | `LedgeGrab` | Air (lip detected ahead) | Run, Idle (mantle done), Air (jump/drop) |
 | `WallRun` | Air (wall contact at tangential speed) | Air (kick/expiry), WallSlide (decay), Run |
 | `SlideHop` | Slide (jump from established slide) | as `Air` (it extends Air) |
-| `Backflip` | Idle, Run (jump opposing facing at standstill) | as `Air` (it extends Air) |
-| `SideFlip` | Idle, Run (jump with low-speed strafe input) | as `Air` (it extends Air) |
+| `Backflip` | Idle, Run (jump opposing facing at standstill; away+jump while Z-targeting) | as `Air` (it extends Air) |
+| `SideFlip` | Idle, Run (jump with low-speed strafe input; sideways+jump while Z-targeting) | as `Air` (it extends Air) |
+| `Lunge` | Idle, Run (attack while Z-targeting — via CombatController) | Idle, Run (after landing recovery) |
 
 Bunny hops intentionally never leave `Air`. The wavedash is not a state:
 it lives inside `Dash`'s jump-out handling.
@@ -307,7 +350,8 @@ on the mesh pivot (squash-and-stretch per state, slam flattening, run bob).
 To slot in real art later, author animations with the same snake_case names
 (`idle`, `run`, `air`, `dash`, `ground_pound`, `pound_land`, `wall_slide`,
 `slide`, `turnaround`, `turn_jump`, `long_jump`, `ledge_grab`, `wall_run`,
-`slide_hop`, `backflip`, `side_flip`) on the player's `AnimationPlayer`;
+`slide_hop`, `backflip`, `side_flip`, `lunge`) on the player's
+`AnimationPlayer`;
 existing names are never overwritten by the generator. Landing squash is
 applied on the `Visual/Squash` node — the *parent* of the animated pivot —
 so impact weight stacks with the keyed poses instead of fighting them.
@@ -330,6 +374,9 @@ scenes/
 					 animator, FX, debug draw
   test_level.tscn    CSG greybox level 1: compact per-tech check zones
   test_level_2.tscn  CSG greybox level 2: large-scale traversal zones
+  test_level_3.tscn  combat arena: one zone per enemy + volley court
+  enemies/           enemy scenes: shield_brute, poker, flyer, bouncer,
+					 volley_tower (see ENEMIES.md)
   demo_outdoor/      dressed outdoor demo scene + tree/rock/stone kit
   demo_castle/       dressed castle demo scene + kit/ (wall, arch, column,
 					 tile, stairs, torch, banner, chandelier)
@@ -346,9 +393,14 @@ src/
 	stop_motion_animator.gd  placeholder animations + landing squash
 	states/              one node + script per move; jump variants extend
 						 AirState (air_state.gd)
-	combat/              combat_controller.gd (3-hit combo, hitbox, timing —
-						 parallel to the state machine), staff_animator.gd
-						 (stepped swing poses on the staff visual)
+	combat/              combat_controller.gd (3-hit combo + targeted lunge,
+						 hitbox, timing — parallel to the state machine),
+						 staff_animator.gd (stepped swing poses)
+  targeting/           targeting_system.gd (Z-lock acquire/cycle/break),
+					   companion_orb.gd (trailing fairy orb)
+  enemies/             enemy_base.gd + enemy_state(_machine).gd framework,
+					   shield_brute.gd, volley_tower.gd, volley_orb.gd,
+					   states/ (one script per enemy behavior state)
   level/               level-side scripts: bounce_pad.gd, speed_booster.gd,
 					   moving_platform.gd, level_switcher.gd,
 					   torch_flicker.gd, hit_dummy.gd
@@ -357,7 +409,7 @@ src/
 					   afterimage.gd + afterimage_trail.gd (tech ghosts)
   camera/orbit_camera.gd   orbit + speed-reactive FOV / turn lean
   debug/debug_draw.gd, debug_overlay.gd
-MOVEMENT.md, PIXEL_ART_PIPELINE.md
+MOVEMENT.md, ENEMIES.md, PIXEL_ART_PIPELINE.md
 ```
 
 Extension points: add a state = add one node under `StateMachine` with a

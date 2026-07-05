@@ -2,8 +2,9 @@ class_name SlashArc
 extends MeshInstance3D
 ## One-shot anime-style slash: a low-poly arc fan flashed in front of the
 ## character, roughly tracing the swing hitbox. Rolls one way for combo hit
-## 1, the other for hit 2, and flies flat and larger for hit 3. Expands and
-## fades over a few stepped frames, then frees itself.
+## 1, the other for hit 2, flies flat and larger for hit 3, and stands
+## fully vertical for the lunge attack's overhand slice (combo index 4).
+## Expands and fades over a few stepped frames, then frees itself.
 
 const FRAME := 1.0 / 12.0
 const ARC_DEGREES := 140.0
@@ -33,6 +34,10 @@ static func spawn(parent: Node, origin: Vector3, facing: Vector3,
 			basis = basis.rotated(facing.normalized(), ROLL)
 		2:
 			basis = basis.rotated(facing.normalized(), -ROLL)
+		4:
+			# Lunge: the arc plane stands vertical, tracing the overhand chop.
+			basis = basis.rotated(facing.normalized(), PI * 0.5)
+			extra_scale = 1.1
 		_:
 			extra_scale = 1.15
 	arc.global_transform = Transform3D(basis, origin)

@@ -367,3 +367,12 @@ position = Vector3(-3.2, 0, 0.4)
 
 [node name="HitDummy3" parent="Dummies" instance=ExtResource("0_dummy")]
 position = Vector3(0.4, 0, -2.6)
+
+[node name="HitDummy4" parent="Dummies" instance=ExtResource("0_dummy")]
+position = Vector3(9, 0, -5)
+
+[node name="HitDummy5" parent="Dummies" instance=ExtResource("0_dummy")]
+position = Vector3(-9.5, 0, -7)
+
+[node name="HitDummy6" parent="Dummies" instance=ExtResource("0_dummy")]
+position = Vector3(6.5, 0, 8.5)

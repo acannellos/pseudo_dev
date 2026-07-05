@@ -1,0 +1,78 @@
+[gd_scene load_steps=11 format=3 uid="uid://poker0lizard01"]
+
+[ext_resource type="Script" uid="uid://cpwc1yovscvom" path="res://src/enemies/enemy_base.gd" id="1_enemy"]
+[ext_resource type="Script" uid="uid://dfaaar36cdg3v" path="res://src/enemies/enemy_state_machine.gd" id="2_machine"]
+[ext_resource type="Script" uid="uid://cqjvwyjtufvuh" path="res://src/enemies/states/enemy_patrol_state.gd" id="3_patrol"]
+[ext_resource type="Script" uid="uid://bfskl4e566xt8" path="res://src/enemies/states/poker_spacing_state.gd" id="4_spacing"]
+[ext_resource type="Script" uid="uid://cetl0whpg405t" path="res://src/enemies/states/poker_poke_state.gd" id="5_poke"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_foliage.tres" id="6_body"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_wood.tres" id="7_spear"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_poker"]
+radius = 0.4
+height = 1.6
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+material = ExtResource("6_body")
+radius = 0.33
+height = 1.25
+radial_segments = 12
+rings = 6
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+material = ExtResource("6_body")
+radius = 0.22
+height = 0.44
+radial_segments = 10
+rings = 5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_spear"]
+material = ExtResource("7_spear")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 1.4
+radial_segments = 6
+
+[node name="Poker" type="CharacterBody3D" groups=["hittable", "targetable"]]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_enemy")
+max_hp = 3
+move_speed = 3.2
+engage_range = 9.0
+disengage_range = 15.0
+target_height = 1.1
+knockback_speed = 8.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.8, 0)
+shape = SubResource("CapsuleShape3D_poker")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.85, 0)
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="Head" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 1.6, -0.14)
+mesh = SubResource("SphereMesh_head")
+
+[node name="Spear" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0.3, 1.05, -0.55)
+rotation = Vector3(-1.5707964, 0, 0)
+mesh = SubResource("CylinderMesh_spear")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_machine")
+initial_state = NodePath("Patrol")
+
+[node name="Patrol" type="Node" parent="StateMachine"]
+script = ExtResource("3_patrol")
+engage_to = &"Spacing"
+
+[node name="Spacing" type="Node" parent="StateMachine"]
+script = ExtResource("4_spacing")
+
+[node name="Poke" type="Node" parent="StateMachine"]
+script = ExtResource("5_poke")

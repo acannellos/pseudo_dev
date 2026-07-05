@@ -190,6 +190,18 @@ extends Resource
 ## Gravity multiplier while swinging airborne — a slight anime float.
 @export var air_attack_gravity_scale := 0.45
 
+@export_group("Lunge Attack")
+## Forward speed of the Z-targeted jump slice (OoT jump attack).
+@export var lunge_speed := 9.5
+## Upward pop at lunge launch — a short committed hop, not a full jump.
+@export var lunge_up_speed := 5.0
+## Swing duration for the lunge (hitbox live the whole flight).
+@export var lunge_swing_time := 0.55
+## Landing recovery before control returns — the deliberate OoT beat.
+@export var lunge_recovery_time := 0.22
+## Damage multiplier of the lunge slice (OoT jump attacks deal double).
+@export var lunge_damage_multiplier := 2
+
 @export_group("Wall")
 ## Terminal fall speed while wall sliding.
 @export var wall_slide_fall_speed := 5.0

@@ -26,7 +26,8 @@ the link to see their own detail.
 7. [Wall techs — Wall Run, Wall Slide](#wall-techs--wall-run-wall-slide)
 8. [Jump variants — Backflip, Side Flip, Turn Jump, Slide Hop](#jump-variants--backflip-side-flip-turn-jump-slide-hop)
 9. [Traversal — Ledge Grab](#traversal--ledge-grab)
-10. [Full diagram, everything at once](#full-diagram-everything-at-once) (reference only — this is the view that got overwhelming)
+10. [Combat — Lunge](#combat--lunge)
+11. [Full diagram, everything at once](#full-diagram-everything-at-once) (reference only — this is the view that got overwhelming)
 
 ---
 
@@ -397,6 +398,36 @@ flowchart LR
 
 ---
 
+## Combat — Lunge
+
+The one state not entered by another state: `CombatController` (the
+parallel combat component) calls `change_to(&"Lunge")` when Attack is
+pressed while **Z-targeting** from grounded locomotion. Committed flight
+(no steering), overhand slice runs during it, short landing recovery.
+
+```mermaid
+flowchart LR
+    Idle:::core
+    Run:::core
+    Lunge:::combat
+
+    Idle -->|attack while Z-targeting — via CombatController| Lunge
+    Run -->|attack while Z-targeting — via CombatController| Lunge
+    Lunge -->|landing recovery ends, moving| Run
+    Lunge -->|landing recovery ends, still| Idle
+
+    classDef core fill:#4c6ef5,color:#fff,stroke:#364fc7;
+    classDef combat fill:#c92a2a,color:#fff,stroke:#8a1c1c;
+```
+
+- Z-targeting itself is **not** a state — facing lock and strafing are a
+  facing override inside `Player`, and Backflip/SideFlip simply gain their
+  OoT triggers (away+jump / sideways+jump) while locked.
+
+[↑ Back to contents](#contents)
+
+---
+
 ## Full diagram, everything at once
 
 <details>
@@ -441,6 +472,12 @@ flowchart TD
     end
 
     Dash
+    Lunge
+
+    Idle -->|targeted attack via CombatController| Lunge
+    Run -->|targeted attack via CombatController| Lunge
+    Lunge -->|recovery ends| Run
+    Lunge -->|recovery ends| Idle
 
     Idle -->|falls off floor| Air
     Idle -->|jump, opposing facing @ standstill| Backflip

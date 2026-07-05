@@ -15,6 +15,13 @@ extends Node3D
 @export_range(-89.0, 0.0) var pitch_min_degrees := -70.0
 @export_range(0.0, 89.0) var pitch_max_degrees := 35.0
 
+@export_group("Z-Targeting")
+## How quickly the rig swings behind the player when a lock engages (OoT
+## style: camera on the player–enemy line, both in frame).
+@export var lock_turn_speed := 6.0
+## Downward arm pitch held while locked.
+@export var lock_pitch_degrees := -14.0
+
 @export_group("Speed Feedback")
 ## FOV rests here and kicks out toward [member fov_max] with speed.
 @export var fov_base := 75.0
@@ -23,6 +30,9 @@ extends Node3D
 @export var fov_speed_min := 9.0
 @export var fov_speed_max := 28.0
 @export var fov_ease_speed := 5.0
+
+## Z-lock focus, mirrored from the player's TargetingSystem via signals.
+var _lock: Node3D = null
 
 @onready var _arm: SpringArm3D = $SpringArm3D
 @onready var _camera: Camera3D = $SpringArm3D/Camera3D
@@ -33,6 +43,12 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if target != null:
 		global_position = target.global_position + Vector3.UP * pivot_height
+		var targeting := target.get_node_or_null("TargetingSystem") as TargetingSystem
+		if targeting != null:
+			targeting.target_acquired.connect(func(node: Node3D) -> void:
+				_lock = node)
+			targeting.target_released.connect(func() -> void:
+				_lock = null)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -51,15 +67,35 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
-	var stick := Input.get_vector(
-			&"camera_left", &"camera_right", &"camera_up", &"camera_down")
-	if stick != Vector2.ZERO:
-		_rotate_view(-stick.x * stick_sensitivity * delta,
-				-stick.y * stick_sensitivity * delta)
+	if _lock != null and not is_instance_valid(_lock):
+		_lock = null
+	if _lock == null:
+		var stick := Input.get_vector(
+				&"camera_left", &"camera_right", &"camera_up", &"camera_down")
+		if stick != Vector2.ZERO:
+			_rotate_view(-stick.x * stick_sensitivity * delta,
+					-stick.y * stick_sensitivity * delta)
+	else:
+		_update_lock_view(delta)
 	if target != null:
 		var goal := target.global_position + Vector3.UP * pivot_height
 		global_position = global_position.lerp(goal, 1.0 - exp(-follow_speed * delta))
 	_update_speed_feedback(delta)
+
+
+## Locked: swing the rig onto the enemy→player line so the camera sits
+## behind the player looking at the enemy (both in frame), and hold a mild
+## downward pitch. Manual orbit is suspended; the rig still only yaws, so
+## stick-forward keeps meaning "toward the enemy".
+func _update_lock_view(delta: float) -> void:
+	var to_lock := _lock.global_position - target.global_position
+	to_lock.y = 0.0
+	if to_lock.length() < 0.5:
+		return
+	var desired_yaw := atan2(-to_lock.x, -to_lock.z)
+	var blend := 1.0 - exp(-lock_turn_speed * delta)
+	rotation.y = lerp_angle(rotation.y, desired_yaw, blend)
+	_arm.rotation.x = lerpf(_arm.rotation.x, deg_to_rad(lock_pitch_degrees), blend)
 
 
 ## Speed-reactive feedback: FOV kicks out as horizontal speed builds.
