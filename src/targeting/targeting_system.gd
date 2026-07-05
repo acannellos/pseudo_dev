@@ -3,20 +3,30 @@ extends Node
 ## OoT-style Z-targeting, as a component beside the state machine (like
 ## [CombatController]). Press Target to lock the nearest targetable node;
 ## press again to cycle outward through everything in range (wrapping);
-## press with nothing else around to release. The lock also breaks on its
-## own past [member break_range] or after line of sight stays blocked for
+## **double-press to drop the lock outright** (the clean exit when two
+## enemies would otherwise ping-pong forever); press with nothing else
+## around to release. The lock also breaks on its own past
+## [member break_range] or after line of sight stays blocked for
 ## [member los_grace] seconds.
+##
+## **Focus mode**: press-and-hold Target with no candidate in sight and the
+## character squares up in whatever direction they were facing — same
+## strafing/backflip/sidehop moveset as a lock, over-the-shoulder camera,
+## crosshair — until the button is released. It's the aim stance for the
+## sidearm when there's nothing to lock.
 ##
 ## Targets are nodes in the "targetable" group. Optional contract:
 ## `is_targetable() -> bool` (dead/downed things return false) and
 ## `target_point() -> Vector3` (where the orb hovers and LOS rays aim);
 ## both have sensible fallbacks.
 ##
-## Consumers listen up: the companion orb, the orbit camera, and
-## [Player] facing/flip-variant logic all key off [method is_active].
+## Consumers listen up: the companion orb, the orbit camera, the HUD
+## crosshair, and [Player] facing/flip-variant logic.
 
 signal target_acquired(target: Node3D)
 signal target_released
+signal focus_started
+signal focus_ended
 
 @export var player: Player
 ## Lock-on candidates must be within this range of the player.
@@ -28,22 +38,42 @@ signal target_released
 @export var los_grace := 0.5
 ## Seconds between LOS raycasts — throttled, not per-frame.
 @export var los_check_interval := 0.2
+## Two Target presses within this window cancel the lock entirely.
+@export var double_press_window := 0.3
 
 var target: Node3D = null
+## Facing captured when focus mode began; the strafe reference direction.
+var focus_dir := Vector3.FORWARD
 
+var _focusing := false
 var _los_lost := 0.0
 var _los_timer := 0.0
+var _last_press_age := 999.0
 
 
 func _physics_process(delta: float) -> void:
+	_last_press_age += delta
 	if Input.is_action_just_pressed(&"target"):
 		_on_target_pressed()
+		_last_press_age = 0.0
+	if _focusing and not Input.is_action_pressed(&"target"):
+		_end_focus()
 	if target != null:
 		_validate(delta)
 
 
+## Locked onto a target (focus mode is [method is_focusing]).
 func is_active() -> bool:
 	return target != null
+
+
+func is_focusing() -> bool:
+	return _focusing
+
+
+## Locked or focusing — either way the player strafes and squares up.
+func is_engaged() -> bool:
+	return target != null or _focusing
 
 
 ## Where the lock aims on the current target.
@@ -58,10 +88,16 @@ static func point_of(node: Node3D) -> Vector3:
 
 
 func _on_target_pressed() -> void:
+	# Double-press: hard cancel, no re-acquire on this press.
+	if target != null and _last_press_age <= double_press_window:
+		release()
+		return
 	var candidates := _gather_candidates()
 	if target == null:
 		if not candidates.is_empty():
 			_set_target(candidates[0])
+		elif not _focusing:
+			_begin_focus()
 		return
 	# Cycle outward through the others; wrap back to the nearest. With no
 	# other candidate in range, the press releases the lock instead.
@@ -74,6 +110,17 @@ func _on_target_pressed() -> void:
 		while index < candidates.size() and _dist_to(candidates[index]) <= my_dist:
 			index += 1
 		_set_target(candidates[index % candidates.size()])
+
+
+func _begin_focus() -> void:
+	_focusing = true
+	focus_dir = player.facing
+	focus_started.emit()
+
+
+func _end_focus() -> void:
+	_focusing = false
+	focus_ended.emit()
 
 
 ## Valid, in-range, visible targetables sorted nearest-first.
@@ -92,6 +139,8 @@ func _gather_candidates() -> Array[Node3D]:
 
 
 func _set_target(node: Node3D) -> void:
+	if _focusing:
+		_end_focus()
 	target = node
 	_los_lost = 0.0
 	_los_timer = 0.0

@@ -34,6 +34,8 @@
 [ext_resource type="Script" uid="uid://oab25b7ypns0" path="res://src/player/states/lunge_state.gd" id="32_lunge"]
 [ext_resource type="Script" uid="uid://bc02x0eyqn8ur" path="res://src/targeting/targeting_system.gd" id="33_targeting"]
 [ext_resource type="Script" uid="uid://c36ss80gd6kly" path="res://src/targeting/companion_orb.gd" id="34_orb"]
+[ext_resource type="Script" uid="uid://cvs8eafrbxu0m" path="res://src/player/combat/sidearm_controller.gd" id="35_sidearm"]
+[ext_resource type="Resource" uid="uid://sidearm0arrows1" path="res://src/player/combat/sidearms/magic_arrows.tres" id="36_arrows"]
 
 [sub_resource type="Resource" id="Resource_stats"]
 script = ExtResource("2_stats")
@@ -238,6 +240,12 @@ player = NodePath("..")
 script = ExtResource("34_orb")
 player = NodePath("..")
 targeting = NodePath("../TargetingSystem")
+
+[node name="SidearmController" type="Node" parent="." node_paths=PackedStringArray("player", "targeting")]
+script = ExtResource("35_sidearm")
+player = NodePath("..")
+targeting = NodePath("../TargetingSystem")
+stats = ExtResource("36_arrows")
 
 [node name="PlayerFX" type="Node3D" parent="." unique_id=502428521 node_paths=PackedStringArray("player", "state_machine", "combat")]
 script = ExtResource("22_playerfx")

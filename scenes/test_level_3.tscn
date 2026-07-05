@@ -1,6 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://arena0combat01"]
+[gd_scene load_steps=19 format=3 uid="uid://arena0combat01"]
 
 [ext_resource type="PackedScene" path="res://scenes/objects/hit_dummy.tscn" id="1_dummy"]
+[ext_resource type="PackedScene" uid="uid://barrel0break01" path="res://scenes/objects/breakable_barrel.tscn" id="7_barrel"]
+[ext_resource type="PackedScene" uid="uid://crate0break01" path="res://scenes/objects/breakable_crate.tscn" id="8_crate"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/shield_brute.tscn" id="2_brute"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/poker.tscn" id="3_poker"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/flyer.tscn" id="4_flyer"]
@@ -106,3 +108,20 @@ position = Vector3(20, 0, 16)
 
 [node name="VolleyTower" parent="Enemies" instance=ExtResource("6_tower")]
 position = Vector3(0, 0, -33)
+
+[node name="Breakables" type="Node3D" parent="."]
+
+[node name="Barrel1" parent="Breakables" instance=ExtResource("7_barrel")]
+position = Vector3(6, 0, 2)
+
+[node name="Barrel2" parent="Breakables" instance=ExtResource("7_barrel")]
+position = Vector3(7, 0, 3.1)
+
+[node name="Barrel3" parent="Breakables" instance=ExtResource("7_barrel")]
+position = Vector3(-2.2, 0, -9)
+
+[node name="Crate1" parent="Breakables" instance=ExtResource("8_crate")]
+position = Vector3(-6.5, 0, 2.5)
+
+[node name="Crate2" parent="Breakables" instance=ExtResource("8_crate")]
+position = Vector3(2.2, 0, -9)

@@ -45,7 +45,9 @@ func target_point() -> Vector3:
 func take_hit(hit: Dictionary) -> void:
 	if _down_left > 0.0:
 		return
-	_hp -= int(hit.get("damage", 1))
+	var damage := int(hit.get("damage", 1))
+	_hp -= damage
+	DamageNumber.spawn(get_tree().current_scene, target_point(), damage)
 	_flash_left = FLASH_TIME
 	_set_flash(true)
 	var dir: Vector3 = hit.get("direction", Vector3.FORWARD)

@@ -22,6 +22,15 @@ extends Node3D
 ## Downward arm pitch held while locked.
 @export var lock_pitch_degrees := -14.0
 
+@export_group("Focus Aim")
+## Sideways pivot shift during no-target focus (over the right shoulder).
+@export var focus_shoulder_offset := 0.65
+## Arm length while aiming over the shoulder.
+@export var focus_arm_length := 2.6
+## Blend speed into/out of the shoulder view.
+@export var focus_ease_speed := 7.0
+@export var focus_pitch_degrees := -6.0
+
 @export_group("Speed Feedback")
 ## FOV rests here and kicks out toward [member fov_max] with speed.
 @export var fov_base := 75.0
@@ -33,6 +42,10 @@ extends Node3D
 
 ## Z-lock focus, mirrored from the player's TargetingSystem via signals.
 var _lock: Node3D = null
+var _targeting: TargetingSystem = null
+## 0→1 blend into the over-the-shoulder focus view.
+var _shoulder := 0.0
+var _base_arm_length := 6.0
 
 @onready var _arm: SpringArm3D = $SpringArm3D
 @onready var _camera: Camera3D = $SpringArm3D/Camera3D
@@ -41,13 +54,14 @@ var _lock: Node3D = null
 func _ready() -> void:
 	add_to_group(&"camera_rig")
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_base_arm_length = _arm.spring_length
 	if target != null:
 		global_position = target.global_position + Vector3.UP * pivot_height
-		var targeting := target.get_node_or_null("TargetingSystem") as TargetingSystem
-		if targeting != null:
-			targeting.target_acquired.connect(func(node: Node3D) -> void:
+		_targeting = target.get_node_or_null("TargetingSystem") as TargetingSystem
+		if _targeting != null:
+			_targeting.target_acquired.connect(func(node: Node3D) -> void:
 				_lock = node)
-			targeting.target_released.connect(func() -> void:
+			_targeting.target_released.connect(func() -> void:
 				_lock = null)
 
 
@@ -69,18 +83,36 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if _lock != null and not is_instance_valid(_lock):
 		_lock = null
-	if _lock == null:
+	var focusing := _targeting != null and _targeting.is_focusing()
+	if _lock != null:
+		_update_lock_view(delta)
+	elif focusing:
+		_update_focus_view(delta)
+	else:
 		var stick := Input.get_vector(
 				&"camera_left", &"camera_right", &"camera_up", &"camera_down")
 		if stick != Vector2.ZERO:
 			_rotate_view(-stick.x * stick_sensitivity * delta,
 					-stick.y * stick_sensitivity * delta)
-	else:
-		_update_lock_view(delta)
+	# Ease the shoulder offset and arm length in/out of focus aim.
+	var focus_blend := 1.0 - exp(-focus_ease_speed * delta)
+	_shoulder = lerpf(_shoulder, 1.0 if focusing else 0.0, focus_blend)
+	_arm.spring_length = lerpf(_base_arm_length, focus_arm_length, _shoulder)
 	if target != null:
-		var goal := target.global_position + Vector3.UP * pivot_height
+		var goal := target.global_position + Vector3.UP * pivot_height \
+				+ global_basis.x * focus_shoulder_offset * _shoulder
 		global_position = global_position.lerp(goal, 1.0 - exp(-follow_speed * delta))
 	_update_speed_feedback(delta)
+
+
+## Focus aim: ease behind the direction the player squared up in and settle
+## over the right shoulder (offset applied in the follow goal above).
+func _update_focus_view(delta: float) -> void:
+	var dir := _targeting.focus_dir
+	var desired_yaw := atan2(-dir.x, -dir.z)
+	var blend := 1.0 - exp(-focus_ease_speed * delta)
+	rotation.y = lerp_angle(rotation.y, desired_yaw, blend)
+	_arm.rotation.x = lerpf(_arm.rotation.x, deg_to_rad(focus_pitch_degrees), blend)
 
 
 ## Locked: swing the rig onto the enemy→player line so the camera sits

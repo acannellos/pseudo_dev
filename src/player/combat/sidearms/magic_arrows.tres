@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SidearmStats" load_steps=2 format=3 uid="uid://sidearm0arrows1"]
+
+[ext_resource type="Script" path="res://src/player/combat/sidearm_stats.gd" id="1_stats"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Magic Arrows"
+max_ammo = 20
+damage = 1
+projectile_speed = 16.0
+projectile_gravity = 18.0
+cooldown = 0.35
+focus_aim_range = 14.0
+color_core = Color(0.6, 0.95, 1.0, 1.0)
+color_trail = Color(0.3, 0.55, 1.0, 1.0)

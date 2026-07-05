@@ -59,6 +59,9 @@ var _standing_shape_center_y := 0.0
 ## Optional Z-targeting component; facing and flip variants key off it.
 @onready var targeting: TargetingSystem = \
 		get_node_or_null("TargetingSystem") as TargetingSystem
+## Optional sidearm component (mana orbs refill it through here).
+@onready var sidearm: SidearmController = \
+		get_node_or_null("SidearmController") as SidearmController
 
 
 func _ready() -> void:
@@ -150,17 +153,26 @@ func flip_jump_variant() -> StringName:
 	return &""
 
 
+## Locked on OR holding the no-target focus stance — both strafe.
 func is_targeting() -> bool:
+	return targeting != null and targeting.is_engaged()
+
+
+## Locked onto an actual target (the lunge and sidearm auto-aim need one).
+func is_locked_on() -> bool:
 	return targeting != null and targeting.is_active()
 
 
-## Horizontal direction toward the current lock target (facing fallback).
+## Horizontal strafe reference: toward the lock target, or the focus
+## direction captured when the stance began (facing fallback).
 func target_dir() -> Vector3:
-	if not is_targeting():
-		return facing
-	var to_target := targeting.target.global_position - global_position
-	to_target.y = 0.0
-	return to_target.normalized() if to_target.length() > 0.05 else facing
+	if is_locked_on():
+		var to_target := targeting.target.global_position - global_position
+		to_target.y = 0.0
+		return to_target.normalized() if to_target.length() > 0.05 else facing
+	if targeting != null and targeting.is_focusing():
+		return targeting.focus_dir
+	return facing
 
 
 ## Enemy attacks shove instead of damaging (no player health yet): a flat

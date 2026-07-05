@@ -65,8 +65,10 @@ func take_hit(hit: Dictionary) -> void:
 	if not _hit_allowed(hit):
 		_blocked_feedback(hit)
 		return
-	hp -= int(hit.get("damage", 1))
+	var damage := int(hit.get("damage", 1))
+	hp -= damage
 	flash()
+	DamageNumber.spawn(get_tree().current_scene, target_point(), damage)
 	if hp <= 0:
 		_die()
 

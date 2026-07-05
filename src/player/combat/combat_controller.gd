@@ -70,8 +70,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		_update_chain(delta)
 	if _buffer_left > 0.0 and _swing_left <= 0.0 and _can_attack():
-		if player.is_targeting() and LUNGE_STATES.has(
-				StringName(state_machine.current_state.name)):
+		if _wants_lunge():
 			_start_lunge()
 		else:
 			_start_swing()
@@ -83,6 +82,17 @@ func is_swinging() -> bool:
 
 func _can_attack() -> bool:
 	return not BLOCKED_STATES.has(StringName(state_machine.current_state.name))
+
+
+## Lunge only on the deliberate OoT input: locked onto a target, grounded,
+## AND pushing forward (toward the enemy) as attack lands. Every other
+## targeted attack stays a normal swing.
+func _wants_lunge() -> bool:
+	if not player.is_locked_on():
+		return false
+	if not LUNGE_STATES.has(StringName(state_machine.current_state.name)):
+		return false
+	return player.move_dir.dot(player.target_dir()) > 0.5
 
 
 func _start_swing() -> void:

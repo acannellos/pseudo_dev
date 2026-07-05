@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://crate0break01"]
+
+[ext_resource type="Script" uid="uid://dlvqudi1w0jk7" path="res://src/level/breakable.gd" id="1_breakable"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_wood.tres" id="2_wood"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_dark_metal.tres" id="3_trim"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_crate"]
+size = Vector3(0.95, 0.95, 0.95)
+
+[sub_resource type="BoxMesh" id="BoxMesh_body"]
+material = ExtResource("2_wood")
+size = Vector3(0.9, 0.9, 0.9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_trim"]
+material = ExtResource("3_trim")
+size = Vector3(0.98, 0.14, 0.98)
+
+[node name="BreakableCrate" type="StaticBody3D" groups=["hittable"]]
+script = ExtResource("1_breakable")
+hit_points = 2
+orb_ammo = 8
+break_speed = 15.0
+debris_color = Color(0.45, 0.32, 0.18, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.48, 0)
+shape = SubResource("BoxShape3D_crate")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.45, 0)
+mesh = SubResource("BoxMesh_body")
+
+[node name="TrimTop" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.8, 0)
+mesh = SubResource("BoxMesh_trim")
+
+[node name="TrimBottom" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.1, 0)
+mesh = SubResource("BoxMesh_trim")

@@ -134,6 +134,7 @@ func _fire() -> void:
 func _take_volley_hit() -> void:
 	_hp -= 1
 	_flash(FLASH_TIME)
+	DamageNumber.spawn(get_tree().current_scene, target_point(), 1)
 	if _hp <= 0:
 		_die()
 	else:
