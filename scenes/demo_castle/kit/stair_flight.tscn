@@ -1,0 +1,55 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_castle_trim.tres" id="1_trim"]
+
+[sub_resource type="BoxShape3D" id="ramp_shape"]
+size = Vector3(2, 0.5, 7.4)
+
+[node name="StairFlight" type="Node3D"]
+
+[node name="Step1" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.275, -0.35)
+size = Vector3(2, 0.55, 0.7)
+material = ExtResource("1_trim")
+
+[node name="Step2" type="CSGBox3D" parent="."]
+position = Vector3(0, 0.825, -1.05)
+size = Vector3(2, 0.55, 0.7)
+material = ExtResource("1_trim")
+
+[node name="Step3" type="CSGBox3D" parent="."]
+position = Vector3(0, 1.375, -1.75)
+size = Vector3(2, 0.55, 0.7)
+material = ExtResource("1_trim")
+
+[node name="Step4" type="CSGBox3D" parent="."]
+position = Vector3(0, 1.925, -2.45)
+size = Vector3(2, 0.55, 0.7)
+material = ExtResource("1_trim")
+
+[node name="Step5" type="CSGBox3D" parent="."]
+position = Vector3(0, 2.475, -3.15)
+size = Vector3(2, 0.55, 0.7)
+material = ExtResource("1_trim")
+
+[node name="Step6" type="CSGBox3D" parent="."]
+position = Vector3(0, 3.025, -3.85)
+size = Vector3(2, 0.55, 0.7)
+material = ExtResource("1_trim")
+
+[node name="Step7" type="CSGBox3D" parent="."]
+position = Vector3(0, 3.575, -4.55)
+size = Vector3(2, 0.55, 0.7)
+material = ExtResource("1_trim")
+
+[node name="Step8" type="CSGBox3D" parent="."]
+position = Vector3(0, 4.125, -5.25)
+size = Vector3(2, 0.55, 0.7)
+material = ExtResource("1_trim")
+
+[node name="RampBody" type="StaticBody3D" parent="."]
+
+[node name="RampShape" type="CollisionShape3D" parent="RampBody"]
+position = Vector3(0, 2.0, -2.8)
+rotation = Vector3(0.666, 0, 0)
+shape = SubResource("ramp_shape")

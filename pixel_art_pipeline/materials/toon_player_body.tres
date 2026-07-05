@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://dhxw06j81mlf7"]
+
+[ext_resource type="Shader" uid="uid://dm2y0ney4pk30" path="res://pixel_art_pipeline/shaders/toon.gdshader" id="1_toon"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_toon")
+shader_parameter/albedo_color = Color(0.96, 0.56, 0.66, 1)
+shader_parameter/band_count = 3
+shader_parameter/band_softness = 0.02
+shader_parameter/rim_size = 0.2
+shader_parameter/rim_strength = 0.35
+shader_parameter/emission_energy = 0.0

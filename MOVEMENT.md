@@ -7,6 +7,12 @@ every move preserves, redirects, or converts speed — nothing resets it.
 Open the project and press Play (`scenes/main.tscn` is the main scene).
 Fall off the world and you respawn at the start.
 
+The game renders through a toggleable 3D-pixel-art pipeline (low-res
+viewport, camera texel snapping, outlines, palette crush, toon lighting) —
+see [PIXEL_ART_PIPELINE.md](PIXEL_ART_PIPELINE.md). Two dressed demo
+scenes (outdoor fantasy, castle interior) join the two greybox test levels
+in the F5 rotation; the game boots into the outdoor demo.
+
 ## Controls
 
 | Action | Keyboard / mouse | Gamepad |
@@ -18,7 +24,8 @@ Fall off the world and you respawn at the start.
 | Crouch / Slide (hold) | Left Ctrl | L3 (left stick click) |
 | Ground pound | C | B / Left shoulder |
 | Toggle debug view | F3 | — |
-| Cycle test level | F5 | — |
+| Cycle level (outdoor → castle → test 1 → test 2) | F5 | — |
+| Toggle render-pipeline layers | 1–8 | — |
 | Release / capture mouse | Esc / click | — |
 
 ## The movement kit
@@ -195,6 +202,25 @@ in the old velocity direction, and pound impacts spawn an expanding
 shockwave ring. FX listen to player signals (`skid_started`, `landed`,
 state changes) via the `PlayerFX` node — states stay pure logic.
 
+## Demo scene tours
+
+Both demo scenes route the full movement kit through dressed environments;
+the full tours (and every render-pipeline detail) live in
+[PIXEL_ART_PIPELINE.md](PIXEL_ART_PIPELINE.md). Short version:
+
+**Outdoor fantasy (`scenes/demo_outdoor/`)** — boot scene. Ledge-grab
+terraces up to a ruin plateau; a wall-kick chimney tower with a pound pad
+and a 16 m pound-dash gap to a floating island; a 20° runway into a
+stepping-stone bunny-hop chain across a river; a gorge wall-run crossing
+with a recovery bounce pad on the gorge floor.
+
+**Castle interior (`scenes/demo_castle/`)** — stairs to a broken balcony
+crossed by a 12 m wall-run; pound pad → dash-convert (or long jump) across
+the great hall to the east-ledge goal, with a moving-platform lift and
+table → column-capital ledge grabs as slower routes; an actual fireplace
+chimney to wall-kick up onto the roof; a long-jump-friendly hall aisle —
+all lit by flickering torch point lights.
+
 ## Test level tour (`scenes/test_level.tscn`)
 
 - **Plaza** (grey) — spawn, flat ground.
@@ -254,20 +280,31 @@ To slot in real art later, author animations with the same snake_case names
 `slide_hop`, `backflip`, `side_flip`) on the player's `AnimationPlayer`;
 existing names are never overwritten by the generator. Landing squash is
 applied on the `Visual/Squash` node — the *parent* of the animated pivot —
-so impact weight stacks with the keyed poses instead of fighting them. Meshes are low-poly primitives and materials are plain
-`StandardMaterial3D` albedo colours, so a toon/gooch shading pass can be
-applied later without restructuring.
+so impact weight stacks with the keyed poses instead of fighting them.
+The character visual is a ball-with-feet (sphere body, ellipsoid feet,
+oval eyes, cheeks) built from primitive meshes under the same pivot, so
+every generated animation and the landing squash apply to it unchanged;
+the collision capsule is untouched. All meshes use the shared toon
+material library (`pixel_art_pipeline/materials/`) — the stepped-shading
+pass described in PIXEL_ART_PIPELINE.md.
 
 ## Project structure
 
 ```
 scenes/
-  main.tscn          entry point: level + player + camera + overlay + switcher
-  player.tscn        character body, visuals, states, animator, FX, debug draw
+  main.tscn          entry point: pixel pipeline + level + player + camera
+					 + overlay + switcher (world lives in a SubViewport)
+  player.tscn        character body, ball-with-feet visuals, states,
+					 animator, FX, debug draw
   test_level.tscn    CSG greybox level 1: compact per-tech check zones
   test_level_2.tscn  CSG greybox level 2: large-scale traversal zones
+  demo_outdoor/      dressed outdoor demo scene + tree/rock/stone kit
+  demo_castle/       dressed castle demo scene + kit/ (wall, arch, column,
+					 tile, stairs, torch, banner, chandelier)
   objects/           reusable level objects (instance freely)
 	bounce_pad.tscn, speed_booster.tscn, moving_platform.tscn
+pixel_art_pipeline/  render pipeline: pipeline + texel-snap scripts,
+					 post/toon shaders, shared toon material library
 src/
   player/
 	player.gd            shared data + physics helpers (CharacterBody3D)
@@ -277,12 +314,13 @@ src/
 	states/              one node + script per move; jump variants extend
 						 AirState (air_state.gd)
   level/               level-side scripts: bounce_pad.gd, speed_booster.gd,
-					   moving_platform.gd, level_switcher.gd
+					   moving_platform.gd, level_switcher.gd,
+					   torch_flicker.gd
   fx/                  player_fx.gd (signal-driven skid dust / pound ring),
 					   shockwave_ring.gd
   camera/orbit_camera.gd   orbit + speed-reactive FOV / turn lean
   debug/debug_draw.gd, debug_overlay.gd
-MOVEMENT.md
+MOVEMENT.md, PIXEL_ART_PIPELINE.md
 ```
 
 Extension points: add a state = add one node under `StateMachine` with a

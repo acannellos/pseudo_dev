@@ -1,63 +1,89 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene format=3 uid="uid://d3jpudkdsqmcp"]
 
-[ext_resource type="PackedScene" path="res://scenes/test_level.tscn" id="1_level"]
-[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
-[ext_resource type="Script" path="res://src/camera/orbit_camera.gd" id="3_camera"]
-[ext_resource type="Script" path="res://src/debug/debug_overlay.gd" id="4_overlay"]
-[ext_resource type="PackedScene" path="res://scenes/test_level_2.tscn" id="5_level2"]
-[ext_resource type="Script" path="res://src/level/level_switcher.gd" id="6_switcher"]
+[ext_resource type="PackedScene" path="res://scenes/demo_outdoor/demo_outdoor.tscn" id="1_outdoor"]
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/demo_castle.tscn" id="2_castle"]
+[ext_resource type="PackedScene" uid="uid://c2wcj0cn1gdr2" path="res://scenes/test_level.tscn" id="3_level1"]
+[ext_resource type="PackedScene" path="res://scenes/test_level_2.tscn" id="4_level2"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="5_player"]
+[ext_resource type="Script" uid="uid://bfjays677b4qj" path="res://src/camera/orbit_camera.gd" id="6_camera"]
+[ext_resource type="Script" uid="uid://c2cpnm6vx7u4e" path="res://src/debug/debug_overlay.gd" id="7_overlay"]
+[ext_resource type="Script" uid="uid://dy65jrsj2pt8l" path="res://src/level/level_switcher.gd" id="8_switcher"]
+[ext_resource type="Script" uid="uid://c0dela3ajmjqx" path="res://pixel_art_pipeline/pixel_art_pipeline.gd" id="9_pipeline"]
+[ext_resource type="Script" uid="uid://cvgol4fisk84j" path="res://pixel_art_pipeline/texel_snap.gd" id="10_snap"]
+[ext_resource type="Shader" uid="uid://dwucx58cu7kl5" path="res://pixel_art_pipeline/shaders/pixel_post.gdshader" id="11_postshader"]
 
-[sub_resource type="ProceduralSkyMaterial" id="sky_material"]
-sky_top_color = Color(0.35, 0.46, 0.71, 1)
-sky_horizon_color = Color(0.64, 0.65, 0.67, 1)
-ground_bottom_color = Color(0.2, 0.17, 0.13, 1)
-ground_horizon_color = Color(0.64, 0.65, 0.67, 1)
+[sub_resource type="ShaderMaterial" id="post_material"]
+render_priority = -10
+shader = ExtResource("11_postshader")
+shader_parameter/outline_enabled = true
+shader_parameter/quantize_enabled = true
+shader_parameter/dither_enabled = true
+shader_parameter/outline_color = Color(0.07, 0.06, 0.1, 1)
+shader_parameter/outline_strength = 0.85
+shader_parameter/depth_edge_scale = 1.5
+shader_parameter/normal_edge_threshold = 0.55
+shader_parameter/color_levels = 6
+shader_parameter/dither_strength = 0.85
 
-[sub_resource type="Sky" id="sky"]
-sky_material = SubResource("sky_material")
+[sub_resource type="QuadMesh" id="post_quad_mesh"]
+size = Vector2(2, 2)
 
-[sub_resource type="Environment" id="environment"]
-background_mode = 2
-sky = SubResource("sky")
-tonemap_mode = 2
+[node name="Main" type="Node3D" unique_id=200442770]
 
-[node name="Main" type="Node3D"]
+[node name="PixelPipeline" type="Node" parent="." unique_id=912262188 node_paths=PackedStringArray("world_viewport", "screen", "texel_snap", "post_quad")]
+script = ExtResource("9_pipeline")
+world_viewport = NodePath("WorldViewport")
+screen = NodePath("Screen")
+texel_snap = NodePath("WorldViewport/TexelSnap")
+post_quad = NodePath("WorldViewport/PostQuad")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("environment")
+[node name="WorldViewport" type="SubViewport" parent="PixelPipeline" unique_id=1783103415]
+size = Vector2i(388, 220)
+render_target_update_mode = 4
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
-rotation = Vector3(-0.9, -0.5, 0)
-shadow_enabled = true
+[node name="DemoOutdoor" parent="PixelPipeline/WorldViewport" unique_id=1157104675 instance=ExtResource("1_outdoor")]
 
-[node name="TestLevel" parent="." instance=ExtResource("1_level")]
-
-[node name="LevelSwitcher" type="Node" parent="." node_paths=PackedStringArray("current_level", "player")]
-script = ExtResource("6_switcher")
-levels = Array[PackedScene]([ExtResource("1_level"), ExtResource("5_level2")])
-current_level = NodePath("../TestLevel")
+[node name="LevelSwitcher" type="Node" parent="PixelPipeline/WorldViewport" unique_id=345156613 node_paths=PackedStringArray("current_level", "player")]
+script = ExtResource("8_switcher")
+levels = Array[PackedScene]([ExtResource("1_outdoor"), ExtResource("2_castle"), ExtResource("3_level1"), ExtResource("4_level2")])
+current_level = NodePath("../DemoOutdoor")
 player = NodePath("../Player")
 
-[node name="Player" parent="." instance=ExtResource("2_player")]
-position = Vector3(0, 0.3, 4)
+[node name="Player" parent="PixelPipeline/WorldViewport" unique_id=389730490 instance=ExtResource("5_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 4)
 camera_rig_path = NodePath("../CameraRig")
 
-[node name="CameraRig" type="Node3D" parent="." groups=["camera_rig"] node_paths=PackedStringArray("target")]
-position = Vector3(0, 2, 4)
-script = ExtResource("3_camera")
+[node name="CameraRig" type="Node3D" parent="PixelPipeline/WorldViewport" unique_id=888831335 node_paths=PackedStringArray("target") groups=["camera_rig"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 4)
+script = ExtResource("6_camera")
 target = NodePath("../Player")
 
-[node name="SpringArm3D" type="SpringArm3D" parent="CameraRig"]
-rotation = Vector3(-0.35, 0, 0)
+[node name="SpringArm3D" type="SpringArm3D" parent="PixelPipeline/WorldViewport/CameraRig" unique_id=1690554775]
+transform = Transform3D(1, 0, 0, 0, 0.9393727, 0.3428978, 0, -0.3428978, 0.9393727, 0, 0, 0)
 spring_length = 6.0
 margin = 0.2
 
-[node name="Camera3D" type="Camera3D" parent="CameraRig/SpringArm3D"]
+[node name="Camera3D" type="Camera3D" parent="PixelPipeline/WorldViewport/CameraRig/SpringArm3D" unique_id=118218559]
 
-[node name="DebugOverlay" type="CanvasLayer" parent="."]
-script = ExtResource("4_overlay")
+[node name="TexelSnap" type="Node" parent="PixelPipeline/WorldViewport" unique_id=446600501 node_paths=PackedStringArray("camera")]
+script = ExtResource("10_snap")
+camera = NodePath("../CameraRig/SpringArm3D/Camera3D")
 
-[node name="Label" type="Label" parent="DebugOverlay"]
+[node name="PostQuad" type="MeshInstance3D" parent="PixelPipeline/WorldViewport" unique_id=1131234665]
+material_override = SubResource("post_material")
+cast_shadow = 0
+custom_aabb = AABB(-100000, -100000, -100000, 200000, 200000, 200000)
+mesh = SubResource("post_quad_mesh")
+
+[node name="Screen" type="TextureRect" parent="PixelPipeline" unique_id=1795041930]
+texture_filter = 1
+mouse_filter = 2
+expand_mode = 1
+
+[node name="DebugOverlay" type="CanvasLayer" parent="." unique_id=1861591262]
+script = ExtResource("7_overlay")
+
+[node name="Label" type="Label" parent="DebugOverlay" unique_id=1203322062]
 offset_left = 14.0
 offset_top = 12.0
 offset_right = 500.0

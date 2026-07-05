@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://pixel_art_pipeline/shaders/toon.gdshader" id="1_toon"]
+
+[resource]
+shader = ExtResource("1_toon")
+shader_parameter/albedo_color = Color(0.95, 0.75, 0.1, 1)
+shader_parameter/emission_energy = 0.7

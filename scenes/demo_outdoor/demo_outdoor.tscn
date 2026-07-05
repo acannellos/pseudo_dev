@@ -1,0 +1,357 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/demo_outdoor/pine_tree.tscn" id="1_tree"]
+[ext_resource type="PackedScene" path="res://scenes/demo_outdoor/rock.tscn" id="2_rock"]
+[ext_resource type="PackedScene" path="res://scenes/demo_outdoor/standing_stone.tscn" id="3_stone"]
+[ext_resource type="PackedScene" path="res://scenes/objects/bounce_pad.tscn" id="4_pad"]
+[ext_resource type="PackedScene" path="res://scenes/objects/speed_booster.tscn" id="5_booster"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_grass.tres" id="mat_grass"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_grass_dark.tres" id="mat_grass_dark"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_dirt.tres" id="mat_dirt"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_stone.tres" id="mat_stone"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_stone_dark.tres" id="mat_stone_dark"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_water.tres" id="mat_water"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_bhop.tres" id="mat_bhop"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_accent.tres" id="mat_accent"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_goal.tres" id="mat_goal"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_material"]
+sky_top_color = Color(0.3, 0.5, 0.78, 1)
+sky_horizon_color = Color(0.74, 0.78, 0.66, 1)
+ground_bottom_color = Color(0.2, 0.18, 0.12, 1)
+ground_horizon_color = Color(0.6, 0.62, 0.5, 1)
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_material")
+
+[sub_resource type="Environment" id="environment"]
+background_mode = 2
+sky = SubResource("sky")
+tonemap_mode = 2
+
+[node name="DemoOutdoor" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.9, -0.5, 0)
+light_color = Color(1, 0.95, 0.84, 1)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="Terrain" type="Node3D" parent="."]
+
+[node name="Meadow" type="CSGBox3D" parent="Terrain"]
+position = Vector3(0, -0.5, 0)
+use_collision = true
+size = Vector3(64, 1, 64)
+material = ExtResource("mat_grass")
+
+[node name="Path" type="CSGBox3D" parent="Terrain"]
+position = Vector3(0, -0.49, 15)
+use_collision = true
+size = Vector3(4, 1.04, 30)
+material = ExtResource("mat_dirt")
+
+[node name="HillA" type="CSGSphere3D" parent="Terrain"]
+position = Vector3(22, -2.5, 14)
+radius = 8.0
+radial_segments = 9
+rings = 6
+smooth_faces = false
+use_collision = true
+material = ExtResource("mat_grass_dark")
+
+[node name="HillB" type="CSGSphere3D" parent="Terrain"]
+position = Vector3(-22, -4, 18)
+radius = 9.0
+radial_segments = 9
+rings = 6
+smooth_faces = false
+use_collision = true
+material = ExtResource("mat_grass_dark")
+
+[node name="HillC" type="CSGSphere3D" parent="Terrain"]
+position = Vector3(24, -3, -16)
+radius = 7.0
+radial_segments = 9
+rings = 6
+smooth_faces = false
+use_collision = true
+material = ExtResource("mat_grass_dark")
+
+[node name="Terrace1" type="CSGBox3D" parent="Terrain"]
+position = Vector3(0, 1.4, -26)
+use_collision = true
+size = Vector3(22, 2.8, 8)
+material = ExtResource("mat_stone")
+
+[node name="Terrace2" type="CSGBox3D" parent="Terrain"]
+position = Vector3(0, 4.2, -33)
+use_collision = true
+size = Vector3(22, 2.8, 8)
+material = ExtResource("mat_stone")
+
+[node name="Plateau" type="CSGBox3D" parent="Terrain"]
+position = Vector3(0, 2.8, -49)
+use_collision = true
+size = Vector3(48, 5.6, 26)
+material = ExtResource("mat_grass")
+
+[node name="Ruin" type="Node3D" parent="."]
+
+[node name="ArchPillarW" type="CSGBox3D" parent="Ruin"]
+position = Vector3(2, 7.85, -56)
+use_collision = true
+size = Vector3(1.2, 4.5, 1.2)
+material = ExtResource("mat_stone_dark")
+
+[node name="ArchPillarE" type="CSGBox3D" parent="Ruin"]
+position = Vector3(7, 7.85, -56)
+use_collision = true
+size = Vector3(1.2, 4.5, 1.2)
+material = ExtResource("mat_stone_dark")
+
+[node name="ArchLintel" type="CSGBox3D" parent="Ruin"]
+position = Vector3(4.5, 10.6, -56)
+use_collision = true
+size = Vector3(6.6, 1, 1.4)
+material = ExtResource("mat_stone_dark")
+
+[node name="BrokenPillar" type="CSGBox3D" parent="Ruin"]
+position = Vector3(12, 6.9, -48)
+use_collision = true
+size = Vector3(1.2, 2.6, 1.2)
+material = ExtResource("mat_stone_dark")
+
+[node name="FallenLintel" type="CSGBox3D" parent="Ruin"]
+position = Vector3(14.5, 6.1, -52)
+rotation = Vector3(0, 0.5, 0.15)
+use_collision = true
+size = Vector3(4.2, 1, 1.3)
+material = ExtResource("mat_stone_dark")
+
+[node name="Stone1" parent="Ruin" instance=ExtResource("3_stone")]
+position = Vector3(-7.5, 5.6, -50)
+rotation = Vector3(0, 1.57, 0)
+
+[node name="Stone2" parent="Ruin" instance=ExtResource("3_stone")]
+position = Vector3(-11.3, 5.6, -44.9)
+rotation = Vector3(0, 0.9, 0)
+
+[node name="Stone3" parent="Ruin" instance=ExtResource("3_stone")]
+position = Vector3(-17.4, 5.6, -46.6)
+rotation = Vector3(0, 2.2, 0)
+
+[node name="Stone4" parent="Ruin" instance=ExtResource("3_stone")]
+position = Vector3(-17.4, 5.6, -53.4)
+rotation = Vector3(0, 0.5, 0)
+
+[node name="FallenStone" parent="Ruin" instance=ExtResource("3_stone")]
+position = Vector3(-11.3, 6.05, -55.1)
+rotation = Vector3(1.5, 0.3, 0)
+
+[node name="ChimneyTower" type="Node3D" parent="."]
+
+[node name="Tower" type="CSGBox3D" parent="ChimneyTower"]
+position = Vector3(-16, 10.6, -44)
+use_collision = true
+size = Vector3(5, 10, 5)
+material = ExtResource("mat_stone")
+
+[node name="KickWall" type="CSGBox3D" parent="ChimneyTower"]
+position = Vector3(-11, 10.6, -44)
+use_collision = true
+size = Vector3(1, 10, 5)
+material = ExtResource("mat_stone")
+
+[node name="PoundPad" type="CSGBox3D" parent="ChimneyTower"]
+position = Vector3(-16, 15.75, -42.75)
+use_collision = true
+size = Vector3(2.5, 0.3, 2.5)
+material = ExtResource("mat_accent")
+
+[node name="GoalIsland" type="CSGBox3D" parent="ChimneyTower"]
+position = Vector3(6.5, 14.1, -44)
+use_collision = true
+size = Vector3(7, 1, 7)
+material = ExtResource("mat_goal")
+
+[node name="RiverRun" type="Node3D" parent="."]
+
+[node name="Runway" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -5.26, 43)
+rotation = Vector3(0.349, 0, 0)
+use_collision = true
+size = Vector3(10, 1, 28)
+material = ExtResource("mat_dirt")
+
+[node name="NearBank" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -10.08, 62)
+use_collision = true
+size = Vector3(24, 1, 12)
+material = ExtResource("mat_grass")
+
+[node name="BankBooster" parent="RiverRun" instance=ExtResource("5_booster")]
+position = Vector3(0, -9.58, 60)
+
+[node name="River" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -11.1, 92)
+use_collision = true
+size = Vector3(44, 1, 60)
+material = ExtResource("mat_water")
+
+[node name="StepStone1" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -10.2, 71.5)
+use_collision = true
+size = Vector3(3, 1, 3)
+material = ExtResource("mat_bhop")
+
+[node name="StepStone2" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -10.2, 79.5)
+use_collision = true
+size = Vector3(3, 1, 3)
+material = ExtResource("mat_bhop")
+
+[node name="StepStone3" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -10.2, 89.5)
+use_collision = true
+size = Vector3(3, 1, 3)
+material = ExtResource("mat_bhop")
+
+[node name="StepStone4" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -10.2, 101.5)
+use_collision = true
+size = Vector3(3, 1, 3)
+material = ExtResource("mat_bhop")
+
+[node name="FarBank" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -10.3, 124)
+use_collision = true
+size = Vector3(30, 1, 20)
+material = ExtResource("mat_grass")
+
+[node name="FarGoal" type="CSGBox3D" parent="RiverRun"]
+position = Vector3(0, -9.7, 128)
+use_collision = true
+size = Vector3(4, 0.2, 4)
+material = ExtResource("mat_goal")
+
+[node name="FarBooster" parent="RiverRun" instance=ExtResource("5_booster")]
+position = Vector3(0, -9.8, 116)
+
+[node name="Gorge" type="Node3D" parent="."]
+
+[node name="GorgeFloor" type="CSGBox3D" parent="Gorge"]
+position = Vector3(-45, -12.5, 0)
+use_collision = true
+size = Vector3(26, 1, 44)
+material = ExtResource("mat_dirt")
+
+[node name="WestRim" type="CSGBox3D" parent="Gorge"]
+position = Vector3(-64, -6.5, 0)
+use_collision = true
+size = Vector3(16, 13, 26)
+material = ExtResource("mat_grass")
+
+[node name="RunWall" type="CSGBox3D" parent="Gorge"]
+position = Vector3(-46, 2, -8)
+use_collision = true
+size = Vector3(28, 8, 1)
+material = ExtResource("mat_stone_dark")
+
+[node name="LaunchPad" type="CSGBox3D" parent="Gorge"]
+position = Vector3(-33, -0.5, -6)
+use_collision = true
+size = Vector3(4, 1, 4)
+material = ExtResource("mat_grass_dark")
+
+[node name="WestGoal" type="CSGBox3D" parent="Gorge"]
+position = Vector3(-62, 0.15, -6)
+use_collision = true
+size = Vector3(4, 0.3, 4)
+material = ExtResource("mat_goal")
+
+[node name="GorgeBouncePad" parent="Gorge" instance=ExtResource("4_pad")]
+position = Vector3(-45, -12, 2)
+launch_speed = 32.0
+
+[node name="Trees" type="Node3D" parent="."]
+
+[node name="Tree1" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(8, 0, 10)
+
+[node name="Tree2" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(12, 0, 6)
+scale = Vector3(0.8, 0.8, 0.8)
+
+[node name="Tree3" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(-10, 0, 12)
+scale = Vector3(1.15, 1.15, 1.15)
+
+[node name="Tree4" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(-14, 0, 7)
+scale = Vector3(0.85, 0.85, 0.85)
+
+[node name="Tree5" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(16, 0, -8)
+
+[node name="Tree6" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(-8, 0, -12)
+scale = Vector3(1.1, 1.1, 1.1)
+
+[node name="Tree7" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(-18, 0, -6)
+scale = Vector3(0.9, 0.9, 0.9)
+
+[node name="Tree8" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(-8, 5.6, -40)
+
+[node name="Tree9" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(10, 5.6, -52)
+scale = Vector3(1.2, 1.2, 1.2)
+
+[node name="Tree10" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(-60, 0, 5)
+
+[node name="Tree11" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(-66, 0, -4)
+scale = Vector3(0.85, 0.85, 0.85)
+
+[node name="Tree12" parent="Trees" instance=ExtResource("1_tree")]
+position = Vector3(-42, -12, 14)
+scale = Vector3(1.3, 1.3, 1.3)
+
+[node name="Rocks" type="Node3D" parent="."]
+
+[node name="Rock1" parent="Rocks" instance=ExtResource("2_rock")]
+position = Vector3(6, 0, 16)
+
+[node name="Rock2" parent="Rocks" instance=ExtResource("2_rock")]
+position = Vector3(-5, 0, -8)
+rotation = Vector3(0, 1.1, 0)
+scale = Vector3(1.4, 1.4, 1.4)
+
+[node name="Rock3" parent="Rocks" instance=ExtResource("2_rock")]
+position = Vector3(18, 0, 2)
+rotation = Vector3(0, 2.4, 0)
+scale = Vector3(0.8, 0.8, 0.8)
+
+[node name="Rock4" parent="Rocks" instance=ExtResource("2_rock")]
+position = Vector3(-24, 0, -2)
+rotation = Vector3(0, 0.6, 0)
+
+[node name="Rock5" parent="Rocks" instance=ExtResource("2_rock")]
+position = Vector3(-2, 5.6, -46)
+rotation = Vector3(0, 1.9, 0)
+scale = Vector3(1.2, 1.2, 1.2)
+
+[node name="Rock6" parent="Rocks" instance=ExtResource("2_rock")]
+position = Vector3(-48, -12, -12)
+rotation = Vector3(0, 3.0, 0)
+scale = Vector3(1.6, 1.6, 1.6)
+
+[node name="Rock7" parent="Rocks" instance=ExtResource("2_rock")]
+position = Vector3(-9, -10.08, 65)
+rotation = Vector3(0, 0.8, 0)

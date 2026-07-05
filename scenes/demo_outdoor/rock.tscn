@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_rock.tres" id="1_rock"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_stone_dark.tres" id="2_dark"]
+
+[node name="Rock" type="Node3D"]
+
+[node name="Boulder" type="CSGSphere3D" parent="."]
+position = Vector3(0, 0.45, 0)
+scale = Vector3(1.25, 0.85, 1.05)
+radius = 0.9
+radial_segments = 7
+rings = 4
+smooth_faces = false
+use_collision = true
+material = ExtResource("1_rock")
+
+[node name="Chunk" type="CSGSphere3D" parent="."]
+position = Vector3(0.85, 0.25, 0.35)
+scale = Vector3(0.9, 0.7, 0.9)
+radius = 0.5
+radial_segments = 6
+rings = 3
+smooth_faces = false
+use_collision = true
+material = ExtResource("2_dark")

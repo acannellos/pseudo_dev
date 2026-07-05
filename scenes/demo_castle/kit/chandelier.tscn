@@ -1,0 +1,100 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_dark_metal.tres" id="1_metal"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_gold.tres" id="2_gold"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_floor_light.tres" id="3_wax"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_flame.tres" id="4_flame"]
+[ext_resource type="Script" path="res://src/level/torch_flicker.gd" id="5_flicker"]
+
+[node name="Chandelier" type="Node3D"]
+
+[node name="Chain" type="CSGBox3D" parent="."]
+position = Vector3(0, -1.2, 0)
+size = Vector3(0.07, 2.4, 0.07)
+material = ExtResource("1_metal")
+
+[node name="Ring" type="CSGTorus3D" parent="."]
+position = Vector3(0, -2.6, 0)
+inner_radius = 1.1
+outer_radius = 1.35
+sides = 8
+ring_sides = 6
+smooth_faces = false
+material = ExtResource("2_gold")
+
+[node name="CandleE" type="CSGCylinder3D" parent="."]
+position = Vector3(1.2, -2.35, 0)
+radius = 0.06
+height = 0.35
+sides = 6
+smooth_faces = false
+material = ExtResource("3_wax")
+
+[node name="CandleW" type="CSGCylinder3D" parent="."]
+position = Vector3(-1.2, -2.35, 0)
+radius = 0.06
+height = 0.35
+sides = 6
+smooth_faces = false
+material = ExtResource("3_wax")
+
+[node name="CandleN" type="CSGCylinder3D" parent="."]
+position = Vector3(0, -2.35, -1.2)
+radius = 0.06
+height = 0.35
+sides = 6
+smooth_faces = false
+material = ExtResource("3_wax")
+
+[node name="CandleS" type="CSGCylinder3D" parent="."]
+position = Vector3(0, -2.35, 1.2)
+radius = 0.06
+height = 0.35
+sides = 6
+smooth_faces = false
+material = ExtResource("3_wax")
+
+[node name="FlameE" type="CSGSphere3D" parent="."]
+position = Vector3(1.2, -2.08, 0)
+scale = Vector3(1, 1.5, 1)
+radius = 0.1
+radial_segments = 6
+rings = 4
+smooth_faces = false
+material = ExtResource("4_flame")
+
+[node name="FlameW" type="CSGSphere3D" parent="."]
+position = Vector3(-1.2, -2.08, 0)
+scale = Vector3(1, 1.5, 1)
+radius = 0.1
+radial_segments = 6
+rings = 4
+smooth_faces = false
+material = ExtResource("4_flame")
+
+[node name="FlameN" type="CSGSphere3D" parent="."]
+position = Vector3(0, -2.08, -1.2)
+scale = Vector3(1, 1.5, 1)
+radius = 0.1
+radial_segments = 6
+rings = 4
+smooth_faces = false
+material = ExtResource("4_flame")
+
+[node name="FlameS" type="CSGSphere3D" parent="."]
+position = Vector3(0, -2.08, 1.2)
+scale = Vector3(1, 1.5, 1)
+radius = 0.1
+radial_segments = 6
+rings = 4
+smooth_faces = false
+material = ExtResource("4_flame")
+
+[node name="Light" type="OmniLight3D" parent="."]
+position = Vector3(0, -2.2, 0)
+light_color = Color(1, 0.68, 0.35, 1)
+omni_range = 11.0
+shadow_enabled = true
+script = ExtResource("5_flicker")
+base_energy = 1.8
+flicker_amount = 0.12

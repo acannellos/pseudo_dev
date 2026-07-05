@@ -1,0 +1,628 @@
+[gd_scene load_steps=26 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/kit/wall_segment.tscn" id="1_wall"]
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/kit/arch_doorway.tscn" id="2_arch"]
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/kit/column.tscn" id="3_column"]
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/kit/floor_tile.tscn" id="4_tile"]
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/kit/stair_flight.tscn" id="5_stairs"]
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/kit/torch.tscn" id="6_torch"]
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/kit/banner.tscn" id="7_banner"]
+[ext_resource type="PackedScene" path="res://scenes/demo_castle/kit/chandelier.tscn" id="8_chandelier"]
+[ext_resource type="PackedScene" path="res://scenes/objects/moving_platform.tscn" id="9_platform"]
+[ext_resource type="Script" path="res://src/level/torch_flicker.gd" id="10_flicker"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_castle_trim.tres" id="mat_trim"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_castle_wall.tres" id="mat_wall"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_stone.tres" id="mat_stone"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_stone_dark.tres" id="mat_stone_dark"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_wood.tres" id="mat_wood"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_gold.tres" id="mat_gold"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_banner.tres" id="mat_banner"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_accent.tres" id="mat_accent"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_goal.tres" id="mat_goal"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_flame.tres" id="mat_flame"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_grass_dark.tres" id="mat_court"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_material"]
+sky_top_color = Color(0.06, 0.07, 0.14, 1)
+sky_horizon_color = Color(0.13, 0.12, 0.2, 1)
+ground_bottom_color = Color(0.04, 0.04, 0.07, 1)
+ground_horizon_color = Color(0.1, 0.1, 0.14, 1)
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_material")
+
+[sub_resource type="Environment" id="environment"]
+background_mode = 2
+sky = SubResource("sky")
+tonemap_mode = 2
+
+[sub_resource type="BoxShape3D" id="dais_ramp_shape"]
+size = Vector3(9, 0.3, 2.4)
+
+[node name="DemoCastle" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("environment")
+
+[node name="Moonlight" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-1.0, 0.6, 0)
+light_color = Color(0.6, 0.7, 1, 1)
+light_energy = 0.3
+shadow_enabled = true
+
+[node name="Shell" type="Node3D" parent="."]
+
+[node name="Courtyard" type="CSGBox3D" parent="Shell"]
+position = Vector3(0, -0.51, -10)
+use_collision = true
+size = Vector3(80, 1, 80)
+material = ExtResource("mat_court")
+
+[node name="HallFloor" type="CSGBox3D" parent="Shell"]
+position = Vector3(0, -0.5, -12)
+use_collision = true
+size = Vector3(20, 1, 40)
+material = ExtResource("mat_trim")
+
+[node name="HallCeiling" type="CSGBox3D" parent="Shell"]
+position = Vector3(0, 8.5, -12)
+use_collision = true
+size = Vector3(20, 1, 40)
+material = ExtResource("mat_trim")
+
+[node name="CorridorFloor" type="CSGBox3D" parent="Shell"]
+position = Vector3(15, -0.5, -15)
+use_collision = true
+size = Vector3(14, 1, 6)
+material = ExtResource("mat_trim")
+
+[node name="CorridorCeiling" type="CSGBox3D" parent="Shell"]
+position = Vector3(15, 6.5, -15)
+use_collision = true
+size = Vector3(14, 1, 6)
+material = ExtResource("mat_trim")
+
+[node name="SideRoomFloor" type="CSGBox3D" parent="Shell"]
+position = Vector3(29, -0.5, -15)
+use_collision = true
+size = Vector3(18, 1, 18)
+material = ExtResource("mat_trim")
+
+[node name="SideRoomCeiling" type="CSGBox3D" parent="Shell"]
+position = Vector3(29, 8.5, -15)
+use_collision = true
+size = Vector3(18, 1, 18)
+material = ExtResource("mat_trim")
+
+[node name="ChimneyHole" type="CSGBox3D" parent="Shell/SideRoomCeiling"]
+operation = 2
+position = Vector3(6.85, 0, 0)
+size = Vector3(2.7, 2, 2)
+
+[node name="HallWalls" type="Node3D" parent="."]
+
+[node name="West1" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(-8.5, 0, 3)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="West2" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(-8.5, 0, -3)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="West3" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(-8.5, 0, -9)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="West4" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(-8.5, 0, -15)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="West5" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(-8.5, 0, -21)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="West6" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(-8.5, 0, -27)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="East1" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(8.5, 0, 3)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="East2" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(8.5, 0, -3)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="East3" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(8.5, 0, -9)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="EastArch" parent="HallWalls" instance=ExtResource("2_arch")]
+position = Vector3(8.5, 0, -15)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="East5" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(8.5, 0, -21)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="East6" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(8.5, 0, -27)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="South1" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(-6, 0, 6.5)
+
+[node name="SouthArch" parent="HallWalls" instance=ExtResource("2_arch")]
+position = Vector3(0, 0, 6.5)
+
+[node name="South3" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(6, 0, 6.5)
+
+[node name="North1" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(-6, 0, -30.5)
+
+[node name="North2" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(0, 0, -30.5)
+
+[node name="North3" parent="HallWalls" instance=ExtResource("1_wall")]
+position = Vector3(6, 0, -30.5)
+
+[node name="CorridorWalls" type="Node3D" parent="."]
+
+[node name="CorrN1" parent="CorridorWalls" instance=ExtResource("1_wall")]
+position = Vector3(12, 0, -17.5)
+
+[node name="CorrN2" parent="CorridorWalls" instance=ExtResource("1_wall")]
+position = Vector3(18, 0, -17.5)
+
+[node name="CorrS1" parent="CorridorWalls" instance=ExtResource("1_wall")]
+position = Vector3(12, 0, -12.5)
+
+[node name="CorrS2" parent="CorridorWalls" instance=ExtResource("1_wall")]
+position = Vector3(18, 0, -12.5)
+
+[node name="SideRoomWalls" type="Node3D" parent="."]
+
+[node name="SideN1" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(24, 0, -23.5)
+
+[node name="SideN2" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(30, 0, -23.5)
+
+[node name="SideN3" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(36, 0, -23.5)
+
+[node name="SideS1" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(24, 0, -6.5)
+
+[node name="SideS2" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(30, 0, -6.5)
+
+[node name="SideS3" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(36, 0, -6.5)
+
+[node name="SideE1" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(37.5, 0, -10)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="SideE2" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(37.5, 0, -16)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="SideE3" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(37.5, 0, -22)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="SideW1" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(20.5, 0, -9)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="SideWArch" parent="SideRoomWalls" instance=ExtResource("2_arch")]
+position = Vector3(20.5, 0, -15)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="SideW3" parent="SideRoomWalls" instance=ExtResource("1_wall")]
+position = Vector3(20.5, 0, -21)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="Columns" type="Node3D" parent="."]
+
+[node name="ColW1" parent="Columns" instance=ExtResource("3_column")]
+position = Vector3(-5, 0, 0)
+
+[node name="ColW2" parent="Columns" instance=ExtResource("3_column")]
+position = Vector3(-5, 0, -8)
+
+[node name="ColW3" parent="Columns" instance=ExtResource("3_column")]
+position = Vector3(-5, 0, -16)
+
+[node name="ColW4" parent="Columns" instance=ExtResource("3_column")]
+position = Vector3(-5, 0, -24)
+
+[node name="ColE1" parent="Columns" instance=ExtResource("3_column")]
+position = Vector3(5, 0, 0)
+
+[node name="ColE2" parent="Columns" instance=ExtResource("3_column")]
+position = Vector3(5, 0, -8)
+
+[node name="ColE3" parent="Columns" instance=ExtResource("3_column")]
+position = Vector3(5, 0, -16)
+
+[node name="ColE4" parent="Columns" instance=ExtResource("3_column")]
+position = Vector3(5, 0, -24)
+
+[node name="Beams" type="Node3D" parent="."]
+
+[node name="Beam1" type="CSGBox3D" parent="Beams"]
+position = Vector3(0, 7.6, -6)
+size = Vector3(18, 0.5, 0.7)
+material = ExtResource("mat_wood")
+
+[node name="Beam2" type="CSGBox3D" parent="Beams"]
+position = Vector3(0, 7.6, -14)
+size = Vector3(18, 0.5, 0.7)
+material = ExtResource("mat_wood")
+
+[node name="Beam3" type="CSGBox3D" parent="Beams"]
+position = Vector3(0, 7.6, -22)
+size = Vector3(18, 0.5, 0.7)
+material = ExtResource("mat_wood")
+
+[node name="Balconies" type="Node3D" parent="."]
+
+[node name="BalconyS" type="CSGBox3D" parent="Balconies"]
+position = Vector3(-6.5, 4.15, -3)
+use_collision = true
+size = Vector3(3, 0.5, 10)
+material = ExtResource("mat_stone")
+
+[node name="BalconyN" type="CSGBox3D" parent="Balconies"]
+position = Vector3(-6.5, 4.15, -25)
+use_collision = true
+size = Vector3(3, 0.5, 10)
+material = ExtResource("mat_stone")
+
+[node name="StairLanding" type="CSGBox3D" parent="Balconies"]
+position = Vector3(-6.5, 4.15, 3.5)
+use_collision = true
+size = Vector3(3, 0.5, 3)
+material = ExtResource("mat_stone")
+
+[node name="StairsToBalcony" parent="Balconies" instance=ExtResource("5_stairs")]
+position = Vector3(-0.5, 0, 4.8)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="PoundPad" type="CSGBox3D" parent="Balconies"]
+position = Vector3(-6.5, 4.45, -24)
+use_collision = true
+size = Vector3(2, 0.3, 2)
+material = ExtResource("mat_accent")
+
+[node name="EastLedge" type="CSGBox3D" parent="Balconies"]
+position = Vector3(6.5, 4.15, -16)
+use_collision = true
+size = Vector3(3, 0.5, 20)
+material = ExtResource("mat_stone")
+
+[node name="EastGoal" type="CSGBox3D" parent="Balconies"]
+position = Vector3(6.5, 4.5, -22)
+use_collision = true
+size = Vector3(2, 0.2, 2)
+material = ExtResource("mat_goal")
+
+[node name="Lift" parent="Balconies" instance=ExtResource("9_platform")]
+position = Vector3(3, 0.5, -20)
+travel = Vector3(0, 3.9, 0)
+period = 5.0
+
+[node name="Dais" type="Node3D" parent="."]
+
+[node name="DaisTop" type="CSGBox3D" parent="Dais"]
+position = Vector3(0, 0.4, -27.5)
+use_collision = true
+size = Vector3(8, 0.8, 4)
+material = ExtResource("mat_stone")
+
+[node name="DaisStep" type="CSGBox3D" parent="Dais"]
+position = Vector3(0, 0.2, -25)
+size = Vector3(9, 0.4, 1)
+material = ExtResource("mat_stone_dark")
+
+[node name="DaisRamp" type="StaticBody3D" parent="Dais"]
+
+[node name="DaisRampShape" type="CollisionShape3D" parent="Dais/DaisRamp"]
+position = Vector3(0, 0.32, -24.6)
+rotation = Vector3(0.35, 0, 0)
+shape = SubResource("dais_ramp_shape")
+
+[node name="Throne" type="Node3D" parent="Dais"]
+
+[node name="ThroneBack" type="CSGBox3D" parent="Dais/Throne"]
+position = Vector3(0, 2.5, -29.1)
+use_collision = true
+size = Vector3(1.6, 3.4, 0.4)
+material = ExtResource("mat_stone_dark")
+
+[node name="ThroneTip" type="CSGBox3D" parent="Dais/Throne"]
+position = Vector3(0, 4.35, -29.1)
+rotation = Vector3(0, 0, 0.7853982)
+size = Vector3(1, 1, 0.4)
+material = ExtResource("mat_gold")
+
+[node name="ThroneSeat" type="CSGBox3D" parent="Dais/Throne"]
+position = Vector3(0, 1.15, -28.5)
+use_collision = true
+size = Vector3(1.6, 0.7, 1.2)
+material = ExtResource("mat_stone_dark")
+
+[node name="ThroneArmL" type="CSGBox3D" parent="Dais/Throne"]
+position = Vector3(-0.95, 1.4, -28.5)
+use_collision = true
+size = Vector3(0.3, 1.2, 1.2)
+material = ExtResource("mat_stone_dark")
+
+[node name="ThroneArmR" type="CSGBox3D" parent="Dais/Throne"]
+position = Vector3(0.95, 1.4, -28.5)
+use_collision = true
+size = Vector3(0.3, 1.2, 1.2)
+material = ExtResource("mat_stone_dark")
+
+[node name="ThroneCushion" type="CSGBox3D" parent="Dais/Throne"]
+position = Vector3(0, 1.575, -28.5)
+size = Vector3(1.4, 0.15, 1)
+material = ExtResource("mat_banner")
+
+[node name="Furniture" type="Node3D" parent="."]
+
+[node name="TableTop" type="CSGBox3D" parent="Furniture"]
+position = Vector3(0, 1.05, -10)
+use_collision = true
+size = Vector3(6, 0.15, 1.8)
+material = ExtResource("mat_wood")
+
+[node name="TableLegW" type="CSGBox3D" parent="Furniture"]
+position = Vector3(-2.6, 0.5, -10)
+use_collision = true
+size = Vector3(0.3, 1, 1.6)
+material = ExtResource("mat_wood")
+
+[node name="TableLegE" type="CSGBox3D" parent="Furniture"]
+position = Vector3(2.6, 0.5, -10)
+use_collision = true
+size = Vector3(0.3, 1, 1.6)
+material = ExtResource("mat_wood")
+
+[node name="BenchN" type="CSGBox3D" parent="Furniture"]
+position = Vector3(0, 0.275, -11.4)
+use_collision = true
+size = Vector3(5, 0.55, 0.5)
+material = ExtResource("mat_wood")
+
+[node name="BenchS" type="CSGBox3D" parent="Furniture"]
+position = Vector3(0, 0.275, -8.6)
+use_collision = true
+size = Vector3(5, 0.55, 0.5)
+material = ExtResource("mat_wood")
+
+[node name="Crate1" type="CSGBox3D" parent="Furniture"]
+position = Vector3(24, 0.6, -21)
+use_collision = true
+size = Vector3(1.2, 1.2, 1.2)
+material = ExtResource("mat_wood")
+
+[node name="Crate2" type="CSGBox3D" parent="Furniture"]
+position = Vector3(26.2, 0.6, -21)
+rotation = Vector3(0, 0.25, 0)
+use_collision = true
+size = Vector3(1.2, 1.2, 1.2)
+material = ExtResource("mat_wood")
+
+[node name="Crate3" type="CSGBox3D" parent="Furniture"]
+position = Vector3(25.1, 1.8, -20.8)
+rotation = Vector3(0, 0.5, 0)
+use_collision = true
+size = Vector3(1.2, 1.2, 1.2)
+material = ExtResource("mat_wood")
+
+[node name="Fireplace" type="Node3D" parent="."]
+
+[node name="CheekN" type="CSGBox3D" parent="Fireplace"]
+position = Vector3(35.5, 0.9, -16.4)
+use_collision = true
+size = Vector3(2.4, 1.8, 0.8)
+material = ExtResource("mat_wall")
+
+[node name="CheekS" type="CSGBox3D" parent="Fireplace"]
+position = Vector3(35.5, 0.9, -13.6)
+use_collision = true
+size = Vector3(2.4, 1.8, 0.8)
+material = ExtResource("mat_wall")
+
+[node name="ChimneyFront" type="CSGBox3D" parent="Fireplace"]
+position = Vector3(34.3, 6.9, -15)
+use_collision = true
+size = Vector3(0.8, 10.2, 2.8)
+material = ExtResource("mat_wall")
+
+[node name="ShaftN" type="CSGBox3D" parent="Fireplace"]
+position = Vector3(35.5, 6.8, -16.4)
+use_collision = true
+size = Vector3(3.2, 10.4, 0.8)
+material = ExtResource("mat_wall")
+
+[node name="ShaftS" type="CSGBox3D" parent="Fireplace"]
+position = Vector3(35.5, 6.8, -13.6)
+use_collision = true
+size = Vector3(3.2, 10.4, 0.8)
+material = ExtResource("mat_wall")
+
+[node name="ChimneyBack" type="CSGBox3D" parent="Fireplace"]
+position = Vector3(36.9, 10, -15)
+use_collision = true
+size = Vector3(0.8, 4, 3.6)
+material = ExtResource("mat_wall")
+
+[node name="Fire" type="CSGSphere3D" parent="Fireplace"]
+position = Vector3(36, 0.45, -15)
+scale = Vector3(1, 1.3, 1)
+radius = 0.4
+radial_segments = 7
+rings = 4
+smooth_faces = false
+material = ExtResource("mat_flame")
+
+[node name="FireLight" type="OmniLight3D" parent="Fireplace"]
+position = Vector3(35.8, 1.1, -15)
+light_color = Color(1, 0.58, 0.25, 1)
+omni_range = 10.0
+script = ExtResource("10_flicker")
+base_energy = 3.0
+flicker_amount = 0.3
+
+[node name="RoofGoal" type="CSGBox3D" parent="Fireplace"]
+position = Vector3(32.5, 9.1, -15)
+use_collision = true
+size = Vector3(2, 0.2, 2)
+material = ExtResource("mat_goal")
+
+[node name="Torches" type="Node3D" parent="."]
+
+[node name="TorchColW1" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(-4.5, 3, 0)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="TorchColW3" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(-4.5, 3, -16)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="TorchColE1" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(4.5, 3, 0)
+rotation = Vector3(0, -1.5707964, 0)
+
+[node name="TorchColE3" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(4.5, 3, -16)
+rotation = Vector3(0, -1.5707964, 0)
+
+[node name="TorchDaisW" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(-3, 4, -29.8)
+
+[node name="TorchDaisE" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(3, 4, -29.8)
+
+[node name="TorchCorrN" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(12, 2.8, -16.9)
+
+[node name="TorchCorrS" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(18, 2.8, -13.1)
+rotation = Vector3(0, 3.1415927, 0)
+
+[node name="TorchSideN" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(27, 2.8, -22.9)
+
+[node name="TorchSideS" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(31, 2.8, -7.1)
+rotation = Vector3(0, 3.1415927, 0)
+
+[node name="TorchEntryW" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(-2.5, 3, 7.1)
+
+[node name="TorchEntryE" parent="Torches" instance=ExtResource("6_torch")]
+position = Vector3(2.5, 3, 7.1)
+
+[node name="Banners" type="Node3D" parent="."]
+
+[node name="BannerW1" parent="Banners" instance=ExtResource("7_banner")]
+position = Vector3(-7.8, 6.5, -10)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="BannerW2" parent="Banners" instance=ExtResource("7_banner")]
+position = Vector3(-7.8, 6.5, -18)
+rotation = Vector3(0, 1.5707964, 0)
+
+[node name="BannerE1" parent="Banners" instance=ExtResource("7_banner")]
+position = Vector3(7.8, 6.5, -10)
+rotation = Vector3(0, -1.5707964, 0)
+
+[node name="BannerE2" parent="Banners" instance=ExtResource("7_banner")]
+position = Vector3(7.8, 6.5, -18)
+rotation = Vector3(0, -1.5707964, 0)
+
+[node name="BannerN1" parent="Banners" instance=ExtResource("7_banner")]
+position = Vector3(-3, 6.5, -29.9)
+
+[node name="BannerN2" parent="Banners" instance=ExtResource("7_banner")]
+position = Vector3(3, 6.5, -29.9)
+
+[node name="Chandeliers" type="Node3D" parent="."]
+
+[node name="Chandelier1" parent="Chandeliers" instance=ExtResource("8_chandelier")]
+position = Vector3(0, 8, -4)
+
+[node name="Chandelier2" parent="Chandeliers" instance=ExtResource("8_chandelier")]
+position = Vector3(0, 8, -14)
+
+[node name="CheckerTiles" type="Node3D" parent="."]
+
+[node name="TileA1" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(-6, 0, -25)
+scale = Vector3(2, 1, 2)
+
+[node name="TileA2" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(-6, 0, -17)
+scale = Vector3(2, 1, 2)
+
+[node name="TileA3" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(-6, 0, -9)
+scale = Vector3(2, 1, 2)
+
+[node name="TileA4" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(-6, 0, -1)
+scale = Vector3(2, 1, 2)
+
+[node name="TileB1" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(-2, 0, -21)
+scale = Vector3(2, 1, 2)
+
+[node name="TileB2" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(-2, 0, -13)
+scale = Vector3(2, 1, 2)
+
+[node name="TileB3" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(-2, 0, -5)
+scale = Vector3(2, 1, 2)
+
+[node name="TileB4" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(-2, 0, 3)
+scale = Vector3(2, 1, 2)
+
+[node name="TileC1" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(2, 0, -25)
+scale = Vector3(2, 1, 2)
+
+[node name="TileC2" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(2, 0, -17)
+scale = Vector3(2, 1, 2)
+
+[node name="TileC3" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(2, 0, -9)
+scale = Vector3(2, 1, 2)
+
+[node name="TileC4" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(2, 0, -1)
+scale = Vector3(2, 1, 2)
+
+[node name="TileD1" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(6, 0, -21)
+scale = Vector3(2, 1, 2)
+
+[node name="TileD2" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(6, 0, -13)
+scale = Vector3(2, 1, 2)
+
+[node name="TileD3" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(6, 0, -5)
+scale = Vector3(2, 1, 2)
+
+[node name="TileD4" parent="CheckerTiles" instance=ExtResource("4_tile")]
+position = Vector3(6, 0, 3)
+scale = Vector3(2, 1, 2)

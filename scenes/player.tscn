@@ -1,27 +1,31 @@
-[gd_scene load_steps=29 format=3]
+[gd_scene format=3 uid="uid://bh0mmhlaqpm3c"]
 
-[ext_resource type="Script" path="res://src/player/player.gd" id="1_player"]
-[ext_resource type="Script" path="res://src/player/movement_stats.gd" id="2_stats"]
-[ext_resource type="Script" path="res://src/player/states/state_machine.gd" id="3_machine"]
-[ext_resource type="Script" path="res://src/player/states/idle_state.gd" id="4_idle"]
-[ext_resource type="Script" path="res://src/player/states/run_state.gd" id="5_run"]
-[ext_resource type="Script" path="res://src/player/states/air_state.gd" id="6_air"]
-[ext_resource type="Script" path="res://src/player/states/dash_state.gd" id="7_dash"]
-[ext_resource type="Script" path="res://src/player/states/ground_pound_state.gd" id="8_pound"]
-[ext_resource type="Script" path="res://src/player/states/pound_land_state.gd" id="9_poundland"]
-[ext_resource type="Script" path="res://src/player/states/wall_slide_state.gd" id="10_wallslide"]
-[ext_resource type="Script" path="res://src/player/states/slide_state.gd" id="13_slide"]
-[ext_resource type="Script" path="res://src/player/states/turnaround_state.gd" id="14_turnaround"]
-[ext_resource type="Script" path="res://src/player/states/turn_jump_state.gd" id="15_turnjump"]
-[ext_resource type="Script" path="res://src/player/states/long_jump_state.gd" id="16_longjump"]
-[ext_resource type="Script" path="res://src/player/states/ledge_grab_state.gd" id="17_ledgegrab"]
-[ext_resource type="Script" path="res://src/player/states/wall_run_state.gd" id="18_wallrun"]
-[ext_resource type="Script" path="res://src/player/states/slide_hop_state.gd" id="19_slidehop"]
-[ext_resource type="Script" path="res://src/player/states/backflip_state.gd" id="20_backflip"]
-[ext_resource type="Script" path="res://src/player/states/side_flip_state.gd" id="21_sideflip"]
-[ext_resource type="Script" path="res://src/fx/player_fx.gd" id="22_playerfx"]
-[ext_resource type="Script" path="res://src/player/stop_motion_animator.gd" id="11_animator"]
-[ext_resource type="Script" path="res://src/debug/debug_draw.gd" id="12_debugdraw"]
+[ext_resource type="Script" uid="uid://cb0u7dxukt6sy" path="res://src/player/player.gd" id="1_player"]
+[ext_resource type="Script" uid="uid://bfk07hk74c8t7" path="res://src/player/movement_stats.gd" id="2_stats"]
+[ext_resource type="Script" uid="uid://qcwpujqntuy5" path="res://src/player/states/state_machine.gd" id="3_machine"]
+[ext_resource type="Script" uid="uid://boafctegr0nni" path="res://src/player/states/idle_state.gd" id="4_idle"]
+[ext_resource type="Script" uid="uid://d3kiu43g00w2w" path="res://src/player/states/run_state.gd" id="5_run"]
+[ext_resource type="Script" uid="uid://ut8r7uv7jo8" path="res://src/player/states/air_state.gd" id="6_air"]
+[ext_resource type="Script" uid="uid://cv8xl87brdllh" path="res://src/player/states/dash_state.gd" id="7_dash"]
+[ext_resource type="Script" uid="uid://cc2dx2l3anmq6" path="res://src/player/states/ground_pound_state.gd" id="8_pound"]
+[ext_resource type="Script" uid="uid://ddik851hw8rx6" path="res://src/player/states/pound_land_state.gd" id="9_poundland"]
+[ext_resource type="Script" uid="uid://cp0eai26vsihh" path="res://src/player/states/wall_slide_state.gd" id="10_wallslide"]
+[ext_resource type="Script" uid="uid://dafire0aasih5" path="res://src/player/stop_motion_animator.gd" id="11_animator"]
+[ext_resource type="Script" uid="uid://cu36m56q1eoo8" path="res://src/debug/debug_draw.gd" id="12_debugdraw"]
+[ext_resource type="Script" uid="uid://dpxe4in0jl1y5" path="res://src/player/states/slide_state.gd" id="13_slide"]
+[ext_resource type="Script" uid="uid://dlxy4xshat17m" path="res://src/player/states/turnaround_state.gd" id="14_turnaround"]
+[ext_resource type="Script" uid="uid://d0dxwjqplfrm5" path="res://src/player/states/turn_jump_state.gd" id="15_turnjump"]
+[ext_resource type="Script" uid="uid://rn3q4t8ji3jw" path="res://src/player/states/long_jump_state.gd" id="16_longjump"]
+[ext_resource type="Script" uid="uid://c5eamqmptae7n" path="res://src/player/states/ledge_grab_state.gd" id="17_ledgegrab"]
+[ext_resource type="Script" uid="uid://bxn2h03hqiyc7" path="res://src/player/states/wall_run_state.gd" id="18_wallrun"]
+[ext_resource type="Script" uid="uid://b7jj6ja0gwrvr" path="res://src/player/states/slide_hop_state.gd" id="19_slidehop"]
+[ext_resource type="Script" uid="uid://lgf4ghoymw33" path="res://src/player/states/backflip_state.gd" id="20_backflip"]
+[ext_resource type="Script" uid="uid://bf6isha53emas" path="res://src/player/states/side_flip_state.gd" id="21_sideflip"]
+[ext_resource type="Script" uid="uid://7568v5wlqg5m" path="res://src/fx/player_fx.gd" id="22_playerfx"]
+[ext_resource type="Material" uid="uid://dhxw06j81mlf7" path="res://pixel_art_pipeline/materials/toon_player_body.tres" id="23_bodymat"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_player_feet.tres" id="24_feetmat"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_player_eyes.tres" id="25_eyesmat"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_player_cheeks.tres" id="26_cheeksmat"]
 
 [sub_resource type="Resource" id="Resource_stats"]
 script = ExtResource("2_stats")
@@ -30,112 +34,142 @@ script = ExtResource("2_stats")
 radius = 0.4
 height = 1.6
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
-albedo_color = Color(0.88, 0.89, 0.95, 1)
+[sub_resource type="SphereMesh" id="SphereMesh_body"]
+material = ExtResource("23_bodymat")
+radius = 0.55
+height = 1.1
+radial_segments = 16
+rings = 8
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
-material = SubResource("StandardMaterial3D_body")
-radius = 0.38
-height = 1.2
+[sub_resource type="SphereMesh" id="SphereMesh_foot"]
+material = ExtResource("24_feetmat")
+radius = 0.2
+height = 0.4
+radial_segments = 10
+rings = 5
+
+[sub_resource type="SphereMesh" id="SphereMesh_eye"]
+material = ExtResource("25_eyesmat")
+radius = 0.055
+height = 0.11
 radial_segments = 8
-rings = 3
+rings = 4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nose"]
-albedo_color = Color(0.95, 0.32, 0.2, 1)
+[sub_resource type="SphereMesh" id="SphereMesh_cheek"]
+material = ExtResource("26_cheeksmat")
+radius = 0.05
+height = 0.1
+radial_segments = 8
+rings = 4
 
-[sub_resource type="BoxMesh" id="BoxMesh_nose"]
-material = SubResource("StandardMaterial3D_nose")
-size = Vector3(0.16, 0.16, 0.4)
-
-[node name="Player" type="CharacterBody3D" groups=["player"]]
+[node name="Player" type="CharacterBody3D" unique_id=1653756008 groups=["player"]]
 collision_layer = 2
-collision_mask = 1
 script = ExtResource("1_player")
 stats = SubResource("Resource_stats")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1520920636]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_body")
 
-[node name="Visual" type="Node3D" parent="."]
+[node name="Visual" type="Node3D" parent="." unique_id=1912012068]
 
-[node name="Squash" type="Node3D" parent="Visual"]
+[node name="Squash" type="Node3D" parent="Visual" unique_id=1166167740]
 
-[node name="Pivot" type="Node3D" parent="Visual/Squash"]
+[node name="Pivot" type="Node3D" parent="Visual/Squash" unique_id=2092475115]
 
-[node name="Body" type="MeshInstance3D" parent="Visual/Squash/Pivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-mesh = SubResource("CapsuleMesh_body")
+[node name="Body" type="MeshInstance3D" parent="Visual/Squash/Pivot" unique_id=173208460]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("SphereMesh_body")
 
-[node name="Nose" type="MeshInstance3D" parent="Visual/Squash/Pivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.45)
-mesh = SubResource("BoxMesh_nose")
+[node name="FootL" type="MeshInstance3D" parent="Visual/Squash/Pivot" unique_id=1519602999]
+transform = Transform3D(1.0876482, 0, 0.20921339, 0, 0.6, 0, -0.16438197, 0, 1.3842795, -0.26, 0.14, -0.06)
+mesh = SubResource("SphereMesh_foot")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+[node name="FootR" type="MeshInstance3D" parent="Visual/Squash/Pivot" unique_id=1274553987]
+transform = Transform3D(1.0876482, 0, -0.20921339, 0, 0.6, 0, 0.16438197, 0, 1.3842795, 0.26, 0.14, -0.06)
+mesh = SubResource("SphereMesh_foot")
+
+[node name="EyeL" type="MeshInstance3D" parent="Visual/Squash/Pivot" unique_id=970578395]
+transform = Transform3D(1, 0, 0, 0, 2.2, 0, 0, 0, 0.5, -0.15, 0.95, -0.47)
+mesh = SubResource("SphereMesh_eye")
+
+[node name="EyeR" type="MeshInstance3D" parent="Visual/Squash/Pivot" unique_id=1073018978]
+transform = Transform3D(1, 0, 0, 0, 2.2, 0, 0, 0, 0.5, 0.15, 0.95, -0.47)
+mesh = SubResource("SphereMesh_eye")
+
+[node name="CheekL" type="MeshInstance3D" parent="Visual/Squash/Pivot" unique_id=1433526989]
+transform = Transform3D(1.3, 0, 0, 0, 1, 0, 0, 0, 0.4, -0.3, 0.72, -0.44)
+mesh = SubResource("SphereMesh_cheek")
+
+[node name="CheekR" type="MeshInstance3D" parent="Visual/Squash/Pivot" unique_id=41481935]
+transform = Transform3D(1.3, 0, 0, 0, 1, 0, 0, 0, 0.4, 0.3, 0.72, -0.44)
+mesh = SubResource("SphereMesh_cheek")
+
+[node name="StateMachine" type="Node" parent="." unique_id=8151633 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_machine")
 initial_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="StateMachine"]
+[node name="Idle" type="Node" parent="StateMachine" unique_id=2110860009]
 script = ExtResource("4_idle")
 
-[node name="Run" type="Node" parent="StateMachine"]
+[node name="Run" type="Node" parent="StateMachine" unique_id=2104241271]
 script = ExtResource("5_run")
 
-[node name="Air" type="Node" parent="StateMachine"]
+[node name="Air" type="Node" parent="StateMachine" unique_id=238823517]
 script = ExtResource("6_air")
 
-[node name="Dash" type="Node" parent="StateMachine"]
+[node name="Dash" type="Node" parent="StateMachine" unique_id=131871539]
 script = ExtResource("7_dash")
 
-[node name="GroundPound" type="Node" parent="StateMachine"]
+[node name="GroundPound" type="Node" parent="StateMachine" unique_id=1470197165]
 script = ExtResource("8_pound")
 
-[node name="PoundLand" type="Node" parent="StateMachine"]
+[node name="PoundLand" type="Node" parent="StateMachine" unique_id=510598993]
 script = ExtResource("9_poundland")
 
-[node name="WallSlide" type="Node" parent="StateMachine"]
+[node name="WallSlide" type="Node" parent="StateMachine" unique_id=718128424]
 script = ExtResource("10_wallslide")
 
-[node name="Slide" type="Node" parent="StateMachine"]
+[node name="Slide" type="Node" parent="StateMachine" unique_id=988598301]
 script = ExtResource("13_slide")
 
-[node name="Turnaround" type="Node" parent="StateMachine"]
+[node name="Turnaround" type="Node" parent="StateMachine" unique_id=1572308522]
 script = ExtResource("14_turnaround")
 
-[node name="TurnJump" type="Node" parent="StateMachine"]
+[node name="TurnJump" type="Node" parent="StateMachine" unique_id=1889726018]
 script = ExtResource("15_turnjump")
 
-[node name="LongJump" type="Node" parent="StateMachine"]
+[node name="LongJump" type="Node" parent="StateMachine" unique_id=4770535]
 script = ExtResource("16_longjump")
 
-[node name="LedgeGrab" type="Node" parent="StateMachine"]
+[node name="LedgeGrab" type="Node" parent="StateMachine" unique_id=1855030241]
 script = ExtResource("17_ledgegrab")
 
-[node name="WallRun" type="Node" parent="StateMachine"]
+[node name="WallRun" type="Node" parent="StateMachine" unique_id=2064821096]
 script = ExtResource("18_wallrun")
 
-[node name="SlideHop" type="Node" parent="StateMachine"]
+[node name="SlideHop" type="Node" parent="StateMachine" unique_id=932174984]
 script = ExtResource("19_slidehop")
 
-[node name="Backflip" type="Node" parent="StateMachine"]
+[node name="Backflip" type="Node" parent="StateMachine" unique_id=1132577539]
 script = ExtResource("20_backflip")
 
-[node name="SideFlip" type="Node" parent="StateMachine"]
+[node name="SideFlip" type="Node" parent="StateMachine" unique_id=1673930847]
 script = ExtResource("21_sideflip")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1735683260]
 
-[node name="StopMotionAnimator" type="Node" parent="." node_paths=PackedStringArray("animation_player", "state_machine", "player", "squash_node")]
+[node name="StopMotionAnimator" type="Node" parent="." unique_id=799973052 node_paths=PackedStringArray("animation_player", "state_machine", "player", "squash_node")]
 script = ExtResource("11_animator")
 animation_player = NodePath("../AnimationPlayer")
 state_machine = NodePath("../StateMachine")
 player = NodePath("..")
 squash_node = NodePath("../Visual/Squash")
 
-[node name="PlayerFX" type="Node3D" parent="." node_paths=PackedStringArray("player", "state_machine")]
+[node name="PlayerFX" type="Node3D" parent="." unique_id=502428521 node_paths=PackedStringArray("player", "state_machine")]
 script = ExtResource("22_playerfx")
 player = NodePath("..")
 state_machine = NodePath("../StateMachine")
 
-[node name="DebugDraw" type="Node3D" parent="."]
+[node name="DebugDraw" type="Node3D" parent="." unique_id=842097821]
 script = ExtResource("12_debugdraw")
