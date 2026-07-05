@@ -21,6 +21,7 @@ in the F5 rotation; the game boots into the outdoor demo.
 | Camera | Mouse | Right stick |
 | Jump | Space | A (bottom) |
 | Dash | Shift | X / Right shoulder |
+| Attack (3-hit staff combo) | F | Y (top) |
 | Crouch / Slide (hold) | Left Ctrl | L3 (left stick click) |
 | Ground pound | C | B / Left shoulder |
 | Toggle debug view | F3 | — |
@@ -150,6 +151,30 @@ amplifies the launch. Speed boosters add a flat boost in your current
 movement direction, capped so booster chains can't run away. Both are
 reusable `Area3D` scenes under `scenes/objects/`.
 
+## Combat
+
+**3-hit staff combo** (Pseudoregalia-inspired) — press Attack to swing the
+staff off the back in a quick forward arc; swing 1 chains into 2 into 3
+(back-and-forth swipes, the third slightly wider and double damage), then
+loops. The chain survives a short gap between swings (0.7 s) before
+resetting to swing 1; attack presses are buffered like jumps.
+
+Combat is **not a movement state** — it's a parallel component
+(`CombatController` beside the `StateMachine`), so swinging layers over
+Idle/Run/Air/Dash/Slide and never interrupts momentum: you attack at full
+speed mid-bhop chain or mid-dash. Air swings fall at reduced gravity while
+descending (a slight anime float, never extra jump height). States whose
+hands are busy — GroundPound, PoundLand, LedgeGrab, WallSlide, WallRun,
+Turnaround — suppress the attack and cancel a swing in progress.
+
+The hitbox is a semicircular arc in front of the facing direction, visually
+traced by a low-poly anime slash arc that flashes and fades (rolled one way
+for swing 1, the other for swing 2, flat and larger for swing 3). Anything
+in the `hittable` group with a `take_hit(hit: Dictionary)` method takes the
+hit (`damage`, `direction`, `position`, `combo_index`). Practice dummies
+(`scenes/objects/hit_dummy.tscn` — flash, wobble, knock flat, pop back up)
+stand near the spawn of the outdoor demo and test level 1.
+
 ## State machine
 
 `StateMachine` node under the player hosts one node per state
@@ -199,8 +224,13 @@ camera leans into hard turns as speed builds (`OrbitCamera` "Speed
 Feedback" exports), landings squash the character proportionally to fall
 speed (stepped on twos, like the placeholder animations), skids kick dust
 in the old velocity direction, and pound impacts spawn an expanding
-shockwave ring. FX listen to player signals (`skid_started`, `landed`,
-state changes) via the `PlayerFX` node — states stay pure logic.
+shockwave ring. Every dash and successful move tech (wavedash, bunny hop,
+wall kick, pound conversion, jump variants…) drops a Pseudoregalia-style
+trail of afterimages: frozen world-space snapshots of the character mesh in
+a flat color that fade away (color/count/spacing are exports on the
+player's `AfterimageTrail` node). FX listen to player signals
+(`skid_started`, `landed`, `tech_performed`, state changes) via the
+`PlayerFX` / `AfterimageTrail` nodes — states stay pure logic.
 
 ## Demo scene tours
 
@@ -286,7 +316,9 @@ oval eyes, cheeks) built from primitive meshes under the same pivot, so
 every generated animation and the landing squash apply to it unchanged;
 the collision capsule is untouched. All meshes use the shared toon
 material library (`pixel_art_pipeline/materials/`) — the stepped-shading
-pass described in PIXEL_ART_PIPELINE.md.
+pass described in PIXEL_ART_PIPELINE.md. The staff carried on the back
+lives under the same pivot but is posed by `StaffAnimator` (stepped swing
+poses driven by combat signals), not by the `AnimationPlayer`.
 
 ## Project structure
 
@@ -302,7 +334,8 @@ scenes/
   demo_castle/       dressed castle demo scene + kit/ (wall, arch, column,
 					 tile, stairs, torch, banner, chandelier)
   objects/           reusable level objects (instance freely)
-	bounce_pad.tscn, speed_booster.tscn, moving_platform.tscn
+	bounce_pad.tscn, speed_booster.tscn, moving_platform.tscn,
+	hit_dummy.tscn
 pixel_art_pipeline/  render pipeline: pipeline + texel-snap scripts,
 					 post/toon shaders, shared toon material library
 src/
@@ -313,11 +346,15 @@ src/
 	stop_motion_animator.gd  placeholder animations + landing squash
 	states/              one node + script per move; jump variants extend
 						 AirState (air_state.gd)
+	combat/              combat_controller.gd (3-hit combo, hitbox, timing —
+						 parallel to the state machine), staff_animator.gd
+						 (stepped swing poses on the staff visual)
   level/               level-side scripts: bounce_pad.gd, speed_booster.gd,
 					   moving_platform.gd, level_switcher.gd,
-					   torch_flicker.gd
-  fx/                  player_fx.gd (signal-driven skid dust / pound ring),
-					   shockwave_ring.gd
+					   torch_flicker.gd, hit_dummy.gd
+  fx/                  player_fx.gd (signal-driven skid dust / pound ring /
+					   slash arcs), shockwave_ring.gd, slash_arc.gd,
+					   afterimage.gd + afterimage_trail.gd (tech ghosts)
   camera/orbit_camera.gd   orbit + speed-reactive FOV / turn lean
   debug/debug_draw.gd, debug_overlay.gd
 MOVEMENT.md, PIXEL_ART_PIPELINE.md

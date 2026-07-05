@@ -36,6 +36,7 @@ func physics_update(delta: float) -> void:
 func _super_jump() -> void:
 	player.start_jump(player.stats.pound_jump_velocity)
 	player.set_horizontal_velocity(player.move_dir * player.stats.run_speed * 0.5)
+	player.notify_tech(&"pound_jump")
 	state_machine.change_to(&"Air")
 
 
@@ -51,4 +52,5 @@ func _momentum_boost() -> void:
 	player.set_horizontal_velocity(dir * speed)
 	player.velocity.y = player.stats.pound_boost_hop
 	player.facing = dir
+	player.notify_tech(&"pound_boost")
 	state_machine.change_to(&"Air")

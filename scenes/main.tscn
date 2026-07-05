@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/demo_castle/demo_castle.tscn" id="2_castle"]
 [ext_resource type="PackedScene" uid="uid://c2wcj0cn1gdr2" path="res://scenes/test_level.tscn" id="3_level1"]
 [ext_resource type="PackedScene" path="res://scenes/test_level_2.tscn" id="4_level2"]
-[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="5_player"]
+[ext_resource type="PackedScene" uid="uid://bh0mmhlaqpm3c" path="res://scenes/player.tscn" id="5_player"]
 [ext_resource type="Script" uid="uid://bfjays677b4qj" path="res://src/camera/orbit_camera.gd" id="6_camera"]
 [ext_resource type="Script" uid="uid://c2cpnm6vx7u4e" path="res://src/debug/debug_overlay.gd" id="7_overlay"]
 [ext_resource type="Script" uid="uid://dy65jrsj2pt8l" path="res://src/level/level_switcher.gd" id="8_switcher"]
@@ -22,8 +22,8 @@ shader_parameter/outline_color = Color(0.07, 0.06, 0.1, 1)
 shader_parameter/outline_strength = 0.85
 shader_parameter/depth_edge_scale = 1.5
 shader_parameter/normal_edge_threshold = 0.55
-shader_parameter/color_levels = 6
-shader_parameter/dither_strength = 0.85
+shader_parameter/color_levels = 16
+shader_parameter/dither_strength = 0.0
 
 [sub_resource type="QuadMesh" id="post_quad_mesh"]
 size = Vector2(2, 2)

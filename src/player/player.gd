@@ -11,6 +11,10 @@ signal landed(impact_speed: float)
 ## FX hook: emitted when a skid turnaround plants. [param direction] is the
 ## horizontal velocity direction being bled off (dust should kick this way).
 signal skid_started(direction: Vector3)
+## FX hook: emitted whenever a movement tech fires (dash, wavedash, bunny
+## hop, wall kick, pound conversion, jump variants…). [param tech] names it;
+## listeners like the afterimage trail react without states knowing FX exist.
+signal tech_performed(tech: StringName)
 
 const FALL_LIMIT := -40.0
 const FACING_TURN_SPEED := 14.0
@@ -40,6 +44,9 @@ var hop_chain := 0
 ## Triple jump: which jump of the chain was last performed (1–3, 0 = none).
 var jump_chain := 0
 var air_dash_available := true
+## Extra gravity multiplier owned by the combat component (air-swing float).
+## States keep calling [method apply_gravity] unchanged; combat scales it.
+var combat_gravity_scale := 1.0
 
 var _camera_rig: Node3D
 var _spawn_transform: Transform3D
@@ -97,7 +104,7 @@ func set_horizontal_velocity(flat: Vector3) -> void:
 
 func apply_gravity(delta: float, gravity_scale := 1.0) -> void:
 	velocity.y = maxf(
-			velocity.y - stats.gravity * gravity_scale * delta,
+			velocity.y - stats.gravity * gravity_scale * combat_gravity_scale * delta,
 			-stats.max_fall_speed)
 
 
@@ -203,6 +210,11 @@ func notify_skid(direction: Vector3) -> void:
 	skid_started.emit(direction)
 
 
+## FX hook call site for movement techs (afterimage trail listeners).
+func notify_tech(tech: StringName) -> void:
+	tech_performed.emit(tech)
+
+
 ## Shared wall kick: out + up, tangential speed mostly preserved, air dash
 ## refunded. Used by WallSlide and WallRun; the calling state still owns the
 ## transition back to Air.
@@ -213,6 +225,7 @@ func perform_wall_kick(wall_normal: Vector3) -> void:
 	velocity = Vector3(flat.x, stats.wall_kick_up_speed, flat.z)
 	air_dash_available = true
 	facing = out
+	notify_tech(&"wall_kick")
 
 
 ## Probes for a grabbable ledge lip in [param dir] (horizontal). Returns an

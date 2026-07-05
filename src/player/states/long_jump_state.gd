@@ -19,6 +19,7 @@ func enter(_msg: Dictionary = {}) -> void:
 	player.facing = dir
 	player.coyote_timer = 0.0
 	player.hop_chain = 0
+	player.notify_tech(&"long_jump")
 
 
 func physics_update(delta: float) -> void:

@@ -138,12 +138,12 @@ extends Resource
 
 @export_group("Ledge Grab")
 ## How far ahead of the chest the wall probe reaches.
-@export var ledge_reach := 0.85
+@export var ledge_reach := 1.0
 ## Ledge lip must sit between these heights above the feet to be grabbable.
 @export var ledge_min_height := 0.7
-@export var ledge_max_height := 2.3
+@export var ledge_max_height := 2.4
 ## Rising faster than this means "not near apex yet" — no grab.
-@export var ledge_grab_max_rise_speed := 2.5
+@export var ledge_grab_max_rise_speed := 4.0
 ## Brief hang before the climb starts.
 @export var ledge_hang_time := 0.1
 ## Duration of the climb-up onto the lip.
@@ -170,6 +170,25 @@ extends Resource
 @export var booster_default_boost := 8.0
 ## Boosters never push the player past this horizontal speed.
 @export var booster_max_speed := 30.0
+
+@export_group("Combat")
+## Duration of one staff swing (input locked out until the chain point).
+@export var swing_time := 0.28
+## Portion of the swing (from its start) during which the hitbox is live.
+@export var swing_active_time := 0.16
+## Attack presses within this window before a swing can start are honored.
+@export var attack_buffer_time := 0.2
+## After a swing ends, the next press must land within this window to chain
+## into the next combo hit; later presses start over at swing 1.
+@export var combo_reset_time := 0.7
+## Damage dealt per hit (the third combo hit deals double).
+@export var attack_damage := 1
+## How far in front of the chest the swing arc reaches.
+@export var attack_range := 1.9
+## Half-width of the swing arc hitbox.
+@export var attack_half_width := 1.3
+## Gravity multiplier while swinging airborne — a slight anime float.
+@export var air_attack_gravity_scale := 0.45
 
 @export_group("Wall")
 ## Terminal fall speed while wall sliding.

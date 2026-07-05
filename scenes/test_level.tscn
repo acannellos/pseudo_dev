@@ -1,5 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://c2wcj0cn1gdr2"]
+[gd_scene load_steps=12 format=3 uid="uid://c2wcj0cn1gdr2"]
 
+[ext_resource type="PackedScene" path="res://scenes/objects/hit_dummy.tscn" id="scene_dummy"]
 [ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_ground_grey.tres" id="mat_ground"]
 [ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_slope_orange.tres" id="mat_slope"]
 [ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_steep_red.tres" id="mat_steep"]
@@ -174,3 +175,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 11.5)
 use_collision = true
 size = Vector3(8, 6, 1)
 material = ExtResource("mat_wall")
+
+[node name="Dummies" type="Node3D" parent="."]
+
+[node name="HitDummy1" parent="Dummies" instance=ExtResource("scene_dummy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -3)
+
+[node name="HitDummy2" parent="Dummies" instance=ExtResource("scene_dummy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -3)

@@ -1,15 +1,19 @@
 class_name PlayerFX
 extends Node3D
-## Signal-driven gameplay FX for the player: skid dust bursts and the pound
-## impact shockwave ring. Listens up to [Player] / [PlayerStateMachine]
-## signals — states never call FX directly, so the moves stay pure logic.
+## Signal-driven gameplay FX for the player: skid dust bursts, the pound
+## impact shockwave ring, and combat slash arcs. Listens up to [Player] /
+## [PlayerStateMachine] / [CombatController] signals — states never call FX
+## directly, so the moves stay pure logic.
 
 const SHOCKWAVE_RING := preload("res://src/fx/shockwave_ring.gd")
+const SLASH_ARC := preload("res://src/fx/slash_arc.gd")
 
 @export var player: Player
 ## Wired explicitly (not via player.state_machine) because children ready
 ## before their parent — the player's own @onready vars aren't set yet.
 @export var state_machine: PlayerStateMachine
+## Optional; when set, staff swings flash a slash arc along the facing.
+@export var combat: CombatController
 
 var _skid_dust := CPUParticles3D.new()
 
@@ -19,6 +23,8 @@ func _ready() -> void:
 	add_child(_skid_dust)
 	player.skid_started.connect(_on_skid_started)
 	state_machine.state_changed.connect(_on_state_changed)
+	if combat != null:
+		combat.swing_started.connect(_on_swing_started)
 
 
 func _configure_skid_dust() -> void:
@@ -52,3 +58,10 @@ func _on_skid_started(direction: Vector3) -> void:
 func _on_state_changed(_previous: StringName, current: StringName) -> void:
 	if current == &"PoundLand":
 		SHOCKWAVE_RING.spawn(get_tree().current_scene, player.global_position)
+
+
+## The arc flashes where the hitbox lives: chest height, ahead of the body.
+func _on_swing_started(combo_index: int, direction: Vector3) -> void:
+	var origin := player.global_position + Vector3.UP * 1.0 + direction * 0.3
+	SLASH_ARC.spawn(get_tree().current_scene, origin, direction,
+			combo_index, player.stats.attack_range)

@@ -17,3 +17,4 @@ func enter(msg: Dictionary = {}) -> void:
 			pivot_dir * player.stats.turn_jump_forward_speed)
 	player.facing = pivot_dir
 	player.hop_chain = 0
+	player.notify_tech(&"turn_jump")

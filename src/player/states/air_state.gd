@@ -58,6 +58,7 @@ func _land(impact_speed: float) -> void:
 		player.jump_chain = 0
 		player.apply_hop_bonus()
 		player.start_jump()
+		player.notify_tech(&"bunny_hop")
 		_jump_cut_done = false
 		if name != &"Air":
 			state_machine.change_to(&"Air")

@@ -12,3 +12,4 @@ func enter(msg: Dictionary = {}) -> void:
 			if player.move_dir != Vector3.ZERO else player.facing
 	player.set_horizontal_velocity(pop_dir * player.stats.sideflip_pop_speed)
 	player.hop_chain = 0
+	player.notify_tech(&"side_flip")

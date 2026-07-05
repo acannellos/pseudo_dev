@@ -26,6 +26,7 @@ func enter(_msg: Dictionary = {}) -> void:
 	var speed := maxf(player.stats.dash_speed, player.horizontal_velocity().length())
 	player.velocity = dir * speed
 	player.facing = dir
+	player.notify_tech(&"dash")
 
 
 func physics_update(delta: float) -> void:
@@ -43,6 +44,7 @@ func physics_update(delta: float) -> void:
 			var flat := player.horizontal_velocity()
 			player.set_horizontal_velocity(
 					flat.normalized() * (flat.length() + player.stats.wavedash_boost))
+			player.notify_tech(&"wavedash")
 		player.start_jump()
 		state_machine.change_to(&"Air")
 		return

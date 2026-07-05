@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://dqh3n7y2xkm4v"]
+
+[ext_resource type="Script" uid="uid://d0613s0duaevn" path="res://src/level/hit_dummy.gd" id="1_dummy"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_wood.tres" id="2_wood"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_pad_yellow.tres" id="3_body"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dummy"]
+radius = 0.42
+height = 1.7
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_base"]
+material = ExtResource("2_wood")
+top_radius = 0.34
+bottom_radius = 0.42
+height = 0.14
+radial_segments = 10
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_post"]
+material = ExtResource("2_wood")
+top_radius = 0.09
+bottom_radius = 0.12
+height = 1.0
+radial_segments = 8
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+material = ExtResource("3_body")
+radius = 0.42
+height = 0.84
+radial_segments = 14
+rings = 7
+
+[node name="HitDummy" type="StaticBody3D" groups=["hittable"]]
+script = ExtResource("1_dummy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("CapsuleShape3D_dummy")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Base" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+mesh = SubResource("CylinderMesh_base")
+
+[node name="Post" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("CylinderMesh_post")
+
+[node name="Head" type="MeshInstance3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+mesh = SubResource("SphereMesh_head")

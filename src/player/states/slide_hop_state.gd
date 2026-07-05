@@ -10,3 +10,4 @@ func enter(msg: Dictionary = {}) -> void:
 	super.enter(msg)
 	player.velocity.y = player.stats.slide_hop_velocity
 	player.coyote_timer = 0.0
+	player.notify_tech(&"slide_hop")

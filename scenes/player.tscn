@@ -26,6 +26,11 @@
 [ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_player_feet.tres" id="24_feetmat"]
 [ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_player_eyes.tres" id="25_eyesmat"]
 [ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_player_cheeks.tres" id="26_cheeksmat"]
+[ext_resource type="Script" uid="uid://7cwktvea8q2l" path="res://src/player/combat/combat_controller.gd" id="27_combat"]
+[ext_resource type="Script" uid="uid://dubakgfiwl813" path="res://src/player/combat/staff_animator.gd" id="28_staffanim"]
+[ext_resource type="Script" uid="uid://53mkgicudsk5" path="res://src/fx/afterimage_trail.gd" id="29_afterimage"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_wood.tres" id="30_staffmat"]
+[ext_resource type="Material" path="res://pixel_art_pipeline/materials/toon_gold.tres" id="31_tipmat"]
 
 [sub_resource type="Resource" id="Resource_stats"]
 script = ExtResource("2_stats")
@@ -61,6 +66,23 @@ radius = 0.05
 height = 0.1
 radial_segments = 8
 rings = 4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_staff"]
+material = ExtResource("30_staffmat")
+top_radius = 0.04
+bottom_radius = 0.04
+height = 1.5
+radial_segments = 8
+
+[sub_resource type="SphereMesh" id="SphereMesh_stafftip"]
+material = ExtResource("31_tipmat")
+radius = 0.07
+height = 0.14
+radial_segments = 8
+rings = 4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_attack"]
+size = Vector3(2.6, 1.5, 1.9)
 
 [node name="Player" type="CharacterBody3D" unique_id=1653756008 groups=["player"]]
 collision_layer = 2
@@ -104,6 +126,22 @@ mesh = SubResource("SphereMesh_cheek")
 [node name="CheekR" type="MeshInstance3D" parent="Visual/Squash/Pivot" unique_id=41481935]
 transform = Transform3D(1.3, 0, 0, 0, 1, 0, 0, 0, 0.4, 0.3, 0.72, -0.44)
 mesh = SubResource("SphereMesh_cheek")
+
+[node name="StaffRoot" type="Node3D" parent="Visual/Squash/Pivot" node_paths=PackedStringArray("combat", "staff_pivot")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.7, 0.28)
+script = ExtResource("28_staffanim")
+combat = NodePath("../../../../CombatController")
+staff_pivot = NodePath("StaffPivot")
+
+[node name="StaffPivot" type="Node3D" parent="Visual/Squash/Pivot/StaffRoot"]
+
+[node name="StaffMesh" type="MeshInstance3D" parent="Visual/Squash/Pivot/StaffRoot/StaffPivot"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.15)
+mesh = SubResource("CylinderMesh_staff")
+
+[node name="StaffTip" type="MeshInstance3D" parent="Visual/Squash/Pivot/StaffRoot/StaffPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.9)
+mesh = SubResource("SphereMesh_stafftip")
 
 [node name="StateMachine" type="Node" parent="." unique_id=8151633 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_machine")
@@ -166,10 +204,31 @@ state_machine = NodePath("../StateMachine")
 player = NodePath("..")
 squash_node = NodePath("../Visual/Squash")
 
-[node name="PlayerFX" type="Node3D" parent="." unique_id=502428521 node_paths=PackedStringArray("player", "state_machine")]
+[node name="AttackHitbox" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 1
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackHitbox"]
+shape = SubResource("BoxShape3D_attack")
+
+[node name="CombatController" type="Node" parent="." node_paths=PackedStringArray("player", "state_machine", "hitbox")]
+script = ExtResource("27_combat")
+player = NodePath("..")
+state_machine = NodePath("../StateMachine")
+hitbox = NodePath("../AttackHitbox")
+
+[node name="AfterimageTrail" type="Node" parent="." node_paths=PackedStringArray("player", "source_visual")]
+script = ExtResource("29_afterimage")
+player = NodePath("..")
+source_visual = NodePath("../Visual")
+
+[node name="PlayerFX" type="Node3D" parent="." unique_id=502428521 node_paths=PackedStringArray("player", "state_machine", "combat")]
 script = ExtResource("22_playerfx")
 player = NodePath("..")
 state_machine = NodePath("../StateMachine")
+combat = NodePath("../CombatController")
 
 [node name="DebugDraw" type="Node3D" parent="." unique_id=842097821]
 script = ExtResource("12_debugdraw")
